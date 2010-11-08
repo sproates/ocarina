@@ -1,14 +1,32 @@
 .PHONY: all clean test
 
-ECHO = /usr/bin/echo
-RM = /usr/bin/rm
+COMPILER = g++
+ECHO = echo
+RM = rm
+FLEX = flex
 
 all: ocarina
 
-ocarina:
-	@${ECHO} building
+ocarina: lexer.o main.o
+	@${ECHO} Building...
+	@${COMPILER} -o $@ lexer.o main.o
+
+main.o: src/main.cpp
+	@${ECHO} Compiling src/main.cpp...
+	@${COMPILER} -o $@ src/main.cpp
+
+lexer.o: src/lexer.cpp
+	@${ECHO} Compiling src/lexer.cpp...
+	@${COMPILER} -o $@ src/lexer.cpp
+
+src/lexer.cpp: src/tokens.flex
+	@${ECHO} Creating lexer...
+	@${FLEX} -o src/lexer.cpp --c++ --yyclass=Lexer src/tokens.flex
 
 clean:
-	@${ECHO} cleaning up
+	@${ECHO} Cleaning up...
+	@${RM} src/lexer.cpp
+	@${RM} *.o
+
 test:
-	@${ECHO} testing
+	@${ECHO} Testing...
