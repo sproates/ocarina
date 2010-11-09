@@ -2,31 +2,25 @@
 
 COMPILER = g++
 ECHO = echo
-RM = rm
+RM = rm -f
 FLEX = flex
+EXE = ocarina.exe
 
-all: ocarina
+all: ${EXE}
 
-ocarina: lexer.o main.o
-	@${ECHO} Building...
-	@${COMPILER} -o $@ lexer.o main.o
-
-main.o: src/main.cpp
-	@${ECHO} Compiling src/main.cpp...
-	@${COMPILER} -o $@ src/main.cpp
-
-lexer.o: src/lexer.cpp
-	@${ECHO} Compiling src/lexer.cpp...
-	@${COMPILER} -o $@ src/lexer.cpp
+${EXE}: src/main.cpp src/lexer.cpp
+	${ECHO} Building...
+	${COMPILER} -o $@ src/*.cpp
 
 src/lexer.cpp: src/tokens.flex
-	@${ECHO} Creating lexer...
-	@${FLEX} -o src/lexer.cpp --c++ --yyclass=Lexer src/tokens.flex
+	${ECHO} Creating lexer...
+	${FLEX} -o src/lexer.cpp --c++ src/tokens.flex
 
 clean:
-	@${ECHO} Cleaning up...
-	@${RM} src/lexer.cpp
-	@${RM} *.o
+	${ECHO} Cleaning up...
+	${RM} src/lexer.cpp
+	${RM} *.o
+	${RM} ${EXE}
 
 test:
-	@${ECHO} Testing...
+	${ECHO} Testing...

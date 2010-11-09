@@ -1,15 +1,34 @@
+%option noyywrap
+%option c++
+
 %{
 
-include <iostream>
+#include <iostream>
 
-}%
+%}
+
+NONZERODIGIT [1-9]
+DIGIT [0|NONZERODIGIT]
+INTEGER "-"?{NONZERODIGIT}{DIGIT}+
+REAL "-"{INTEGER}"."{INTEGER}
+
+ALPHA [a-zA-Z]
+
+WHITESPACE [ \t]+
 
 %%
 
-DIGIT [0-9]
+{WHITESPACE}
 
-%%
+{INTEGER} std::cout << "Integer: " << YYText() << std::endl;
 
-int main(int argc, char **argv) {
-  return 0;
+{REAL} std::cout << "Real: " << YYText() << std::endl;
+
+{ALPHA} std::cout << "Alpha: " << YYText() << std::endl;
+
+. {
+  std::cout << "Unknown character or sequence: " << YYText() << std::endl;
+  yyterminate();
 }
+
+%%
