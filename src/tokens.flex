@@ -17,15 +17,20 @@ WHITESPACE [ \t\n]+
 
 {WHITESPACE}
 
-"-"?{NONZERODIGIT}{DIGIT}* std::cout << "Integer: " << YYText() << std::endl;
+"-"?{NONZERODIGIT}{DIGIT}* {
+  std::cout << "Integer: " << YYText() << std::endl;
+}
 
-"-"?{DIGIT}+"."{DIGIT}+ std::cout << "Real: " << YYText() << std::endl;
+"-"?{DIGIT}+"."{DIGIT}+ {
+  std::cout << "Real: " << YYText() << std::endl;
+}
 
-{ALPHA}+{ALPHANUMERIC}* std::cout << "Identifier: " << YYText() << std:: endl;
+{ALPHA}+{ALPHANUMERIC}* {
+  std::cout << "Identifier: " << YYText() << std:: endl;
+}
 
 . {
   std::cout << "Unknown character: " << YYText() << std::endl;
-  yyterminate();
 }
 
 %%
