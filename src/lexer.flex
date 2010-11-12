@@ -2,6 +2,7 @@
 %option c++
 
 %{
+#include "lexer.h"
 #include <iostream>
 %}
 
@@ -34,3 +35,27 @@ WHITESPACE [ \t\n]+
 }
 
 %%
+
+namespace ocarina {
+
+  Lexer::Lexer(std::istream* in, std::ostream* out) :
+    OcarinaFlexLexer(in, out) {
+    std::cout << "Lexer::Lexer()" << std::endl;
+  }
+
+  Lexer::~Lexer() {
+    std::cout << "Lexer::~Lexer()" << std::endl;
+  }
+}
+
+#ifdef yylex
+#undef yylex
+#endif
+
+int OcarinaFlexLexer::yylex() {
+  return 0;
+}
+
+int OcarinaFlexLexer::yywrap() {
+  return 1;
+}
