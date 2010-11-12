@@ -5,10 +5,10 @@
 
 namespace ocarina {
 
-  class Lexer : public OcarinaFlexLexer {
+  class lexer {
     public:
-      Lexer(std::istream* in = 0, std::ostream* out = 0);
-      virtual ~Lexer();
+      lexer();
+      virtual ~lexer();
     private:
   };
 }

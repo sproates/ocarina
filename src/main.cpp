@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "FlexLexer.h"
+#include "lexer.h"
+#include "parser.h"
 
 int main(int argc, char** argv) {
   std::cout << "Ocarina" << std::endl;
-
-  FlexLexer* lexer = new yyFlexLexer();
-  lexer->yylex();
+  ocarina::lexer* lexer = new ocarina::lexer();
+  ocarina::parser* parser = new ocarina::parser();
+  delete parser;
   delete lexer;
-
   return 0;
 }

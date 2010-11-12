@@ -38,24 +38,11 @@ WHITESPACE [ \t\n]+
 
 namespace ocarina {
 
-  Lexer::Lexer(std::istream* in, std::ostream* out) :
-    OcarinaFlexLexer(in, out) {
-    std::cout << "Lexer::Lexer()" << std::endl;
+  lexer::lexer() {
+    std::cout << "ocarina::lexer::lexer()" << std::endl;
   }
 
-  Lexer::~Lexer() {
-    std::cout << "Lexer::~Lexer()" << std::endl;
+  lexer::~lexer() {
+    std::cout << "lexer::~lexer()" << std::endl;
   }
-}
-
-#ifdef yylex
-#undef yylex
-#endif
-
-int OcarinaFlexLexer::yylex() {
-  return 0;
-}
-
-int OcarinaFlexLexer::yywrap() {
-  return 1;
 }
