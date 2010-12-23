@@ -1,7 +1,9 @@
 CC = gcc
 RM = rm -f
 INCLUDES = .
-CFLAGS = -W -Wall -Wextra -I${INCLUDES}
+CFLAGS = -W -Wall -Wextra -Werror -Wtraditional -Wundef -Wshadow \
+-Wpointer-arith -Wmissing-prototypes -Wredundant-decls -Winline \
+-pedantic-errors -std=iso9899:1990 -ansi -I${INCLUDES}
 EXE = ocarina.exe
 
 all: ${EXE}
