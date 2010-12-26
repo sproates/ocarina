@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define LEXER_BUFFER_SIZE 1024
+
 enum token_type {
   TOKEN_INTEGER,
   TOKEN_EOF
@@ -9,25 +11,36 @@ enum token_type {
 enum lexer_state {
   LEXER_COMPLETE,
   LEXER_DEFAULT,
-  LEXER_ERROR
+  LEXER_ERROR,
+  LEXER_IN_IDENTIFIER,
+  LEXER_IN_INTEGER
 };
 
 typedef struct {
   enum lexer_state state;
   FILE * script_file;
   const char * filename;
+  int line_number;
+  int position;
+  char * buffer;
+  int buffer_size;
+  char * token_buffer;
+  int token_position;
+  char current_char;
 } lexer;
 
 typedef struct {
   enum token_type type;
+  char * data;
 } token;
 
 void print_usage(void);
 int run_script(const char * filename);
 lexer * lexer_new(FILE * script_file, const char * filename);
+char lexer_next_char(lexer * lex);
 void lexer_print(lexer * lex);
 token * lexer_next_token(lexer * lex);
-token * token_new(enum token_type type);
+token * token_new(enum token_type type, char * data);
 void token_print(token * tok);
 
 int main(int argc, const char ** argv) {
@@ -62,7 +75,6 @@ int run_script(const char * filename) {
     return 1;
   }
   printf("Starting lexing\n");
-  lexer_print(lex);
   while(1) {
     tok = lexer_next_token(lex);
     if(NULL == tok) {
@@ -70,7 +82,7 @@ int run_script(const char * filename) {
       break;
     }
     if(TOKEN_EOF == tok->type) {
-      printf("Got EOF token");
+      printf("Got EOF token\n");
       break;
     }
     token_print(tok);
@@ -87,7 +99,7 @@ int run_script(const char * filename) {
 lexer * lexer_new(FILE * script_file, const char * filename) {
   lexer * lex;
 
-  lex = malloc(sizeof * lex);
+  lex = malloc(sizeof(* lex));
   if(NULL == lex) {
     printf("Failed to allocate space for lexer!\n");
     return NULL;
@@ -95,22 +107,69 @@ lexer * lexer_new(FILE * script_file, const char * filename) {
   lex->state = LEXER_DEFAULT;
   lex->script_file = script_file;
   lex->filename = filename;
+  lex->line_number = 0;
+  lex->position = 0;
+  lex->buffer = malloc(LEXER_BUFFER_SIZE * (sizeof(char)));
+  lex->buffer_size = 0;
+  lex->token_buffer = malloc(LEXER_BUFFER_SIZE * (sizeof(char)));
+  lex->token_position = 0;
   return lex;
+}
+
+char lexer_next_char(lexer * lex) {
+  printf("lexer_next_char\n");
+  if(0 == lex->buffer_size || lex->position >= lex->buffer_size) {
+    lex->buffer_size = fread(lex->buffer, sizeof(char), LEXER_BUFFER_SIZE, lex->script_file);
+    if(0 == lex->buffer_size) {
+      printf("buffer empty,returning EOF\n");
+      return EOF;
+    }
+  }
+  return lex->buffer[lex->position++];
 }
 
 token * lexer_next_token(lexer * lex) {
   token * tok;
 
-  if(LEXER_DEFAULT == lex->state) {
-    tok = token_new(TOKEN_INTEGER);
-    lex->state = LEXER_COMPLETE;
-  } else {
-    tok = token_new(TOKEN_EOF);
+  switch(lex->state) {
+    case LEXER_DEFAULT:
+      printf("in state LEXER_DEFAULT\n");
+      lex->current_char = lexer_next_char(lex);
+      if(EOF == lex->current_char) {
+        printf("EOF found. Moving to LEXER_COMPLETE\n");
+        lex->state = LEXER_COMPLETE;
+        return lexer_next_token(lex);
+      }
+      if(48 <= lex->current_char && 57 >= lex->current_char) {
+        printf("int found. Moving to LEXER_IN_INTEGER\n");
+        lex->state = LEXER_IN_INTEGER;
+        return lexer_next_token(lex);
+      }
+      break;
+    case LEXER_IN_INTEGER:
+      printf("in state LEXER_IN_INTEGER\n");
+      if(48 <= lex->current_char && 57 >= lex->current_char) {
+        printf("appending current char to token buffer\n");
+        lex->token_buffer[lex->token_position++] = lex->current_char;
+        lex->current_char = lexer_next_char(lex);
+        return lexer_next_token(lex);
+      }
+      printf("end of integer, returning token\n");
+      lex->token_position = 0;
+      lex->state = LEXER_DEFAULT;
+      return token_new(TOKEN_INTEGER, lex->token_buffer);
+      break;
+    case LEXER_COMPLETE:
+    default:
+      printf("in state LEXER_COMPLETE\n");
+      lex->state = LEXER_COMPLETE;
+      tok = token_new(TOKEN_EOF, NULL);
+      break;
   }
   return tok;
 }
 
-token * token_new(enum token_type type) {
+token * token_new(enum token_type type, char * data) {
   token * tok;
 
   tok = malloc(sizeof * tok);
@@ -119,12 +178,15 @@ token * token_new(enum token_type type) {
     return NULL;
   }
   tok->type = type;
+  tok->data = data;
   return tok;
 }
 
 void lexer_print(lexer * lex) {
   printf("Lexer [\n");
   printf("Filename: %s\n", lex->filename);
+  printf("Line: %d\n", lex->line_number);
+  printf("Position: %d\n", lex->position);
   printf("State: ");
   switch(lex->state) {
     case LEXER_COMPLETE:
@@ -155,6 +217,9 @@ void token_print(token * tok) {
     default:
       printf("Unknown");
       break;
+  }
+  if(NULL != tok->data) {
+    printf("\nData: %s", tok->data);
   }
   printf("\n]\n");
 }
