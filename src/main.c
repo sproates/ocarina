@@ -42,6 +42,7 @@ void lexer_print(lexer * lex);
 token * lexer_next_token(lexer * lex);
 token * token_new(enum token_type type, char * data);
 void token_print(token * tok);
+int is_int(char c);
 
 int main(int argc, const char ** argv) {
   printf("Ocarina\n");
@@ -140,7 +141,7 @@ token * lexer_next_token(lexer * lex) {
         lex->state = LEXER_COMPLETE;
         return lexer_next_token(lex);
       }
-      if(48 <= lex->current_char && 57 >= lex->current_char) {
+      if(is_int(lex->current_char)) {
         printf("int found. Moving to LEXER_IN_INTEGER\n");
         lex->state = LEXER_IN_INTEGER;
         return lexer_next_token(lex);
@@ -148,7 +149,7 @@ token * lexer_next_token(lexer * lex) {
       break;
     case LEXER_IN_INTEGER:
       printf("in state LEXER_IN_INTEGER\n");
-      if(48 <= lex->current_char && 57 >= lex->current_char) {
+      if(is_int(lex->current_char)) {
         printf("appending current char to token buffer\n");
         lex->token_buffer[lex->token_position++] = lex->current_char;
         lex->current_char = lexer_next_char(lex);
@@ -222,4 +223,8 @@ void token_print(token * tok) {
     printf("\nData: %s", tok->data);
   }
   printf("\n]\n");
+}
+
+int is_int(char c) {
+  return (48 <= c && 57 >= c);
 }
