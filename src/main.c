@@ -43,6 +43,7 @@ token * lexer_next_token(lexer * lex);
 token * token_new(enum token_type type, char * data);
 void token_print(token * tok);
 int is_int(char c);
+int is_whitespace(char c);
 
 int main(int argc, const char ** argv) {
   printf("Ocarina\n");
@@ -120,6 +121,7 @@ lexer * lexer_new(FILE * script_file, const char * filename) {
 char lexer_next_char(lexer * lex) {
   printf("lexer_next_char\n");
   if(0 == lex->buffer_size || lex->position >= lex->buffer_size) {
+    printf("filling empty buffer\n");
     lex->buffer_size = fread(lex->buffer, sizeof(char), LEXER_BUFFER_SIZE, lex->script_file);
     if(0 == lex->buffer_size) {
       printf("buffer empty,returning EOF\n");
@@ -144,6 +146,10 @@ token * lexer_next_token(lexer * lex) {
       if(is_int(lex->current_char)) {
         printf("int found. Moving to LEXER_IN_INTEGER\n");
         lex->state = LEXER_IN_INTEGER;
+        return lexer_next_token(lex);
+      }
+      if(is_whitespace(lex->current_char)) {
+        printf("skipping whitespace\n");
         return lexer_next_token(lex);
       }
       break;
@@ -227,4 +233,8 @@ void token_print(token * tok) {
 
 int is_int(char c) {
   return (48 <= c && 57 >= c);
+}
+
+int is_whitespace(char c) {
+  return (9 == c || 10 == c || 13 == c || 32 == c);
 }
