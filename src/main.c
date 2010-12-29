@@ -27,6 +27,7 @@ typedef struct {
   char * token_buffer;
   int token_position;
   char current_char;
+  int max_buffer_size;
 } lexer;
 
 typedef struct {
@@ -34,9 +35,9 @@ typedef struct {
   char * data;
 } token;
 
-void print_usage(void);
-int run_script(const char * filename);
-lexer * lexer_new(FILE * script_file, const char * filename);
+void print_usage(const char * exe);
+int lexer_test(const char * filename);
+lexer * lexer_new(FILE * script_file, const char * filename, int max_buffer_size);
 char lexer_next_char(lexer * lex);
 void lexer_print(lexer * lex);
 token * lexer_next_token(lexer * lex);
@@ -46,20 +47,19 @@ int is_int(char c);
 int is_whitespace(char c);
 
 int main(int argc, const char ** argv) {
-  printf("Ocarina\n");
   if(argc < 2) {
-    print_usage();
+    print_usage(argv[0]);
     return 1;
   } else {
-    return run_script(argv[1]);
+    return lexer_test(argv[1]);
   }
 }
 
-void print_usage(void) {
-  printf("Usage: ocarina.exe <filename>\n");
+void print_usage(const char * exe) {
+  printf("Usage: %s <filename>\n", exe);
 }
 
-int run_script(const char * filename) {
+int lexer_test(const char * filename) {
   FILE * script_file;
   int closure;
   lexer * lex;
@@ -70,35 +70,27 @@ int run_script(const char * filename) {
     printf("Could not open %s for reading.\n", filename);
     return 1;
   }
-  printf("Running on %s...\n", filename);
-  lex = lexer_new(script_file, filename);
+  lex = lexer_new(script_file, filename, LEXER_BUFFER_SIZE);
   if(NULL == lex) {
     printf("Unable to start lexing\n");
     return 1;
   }
-  printf("Starting lexing\n");
   while(1) {
     tok = lexer_next_token(lex);
-    if(NULL == tok) {
-      printf("Got NULL token!\n");
-      break;
-    }
-    if(TOKEN_EOF == tok->type) {
-      printf("Got EOF token\n");
+    if(NULL == tok || TOKEN_EOF == tok->type) {
       break;
     }
     token_print(tok);
   }
   closure = fclose(script_file);
   if(EOF == closure) {
-    printf("Oddness. Failed to close file handle on %s.\n", filename);
+    printf("Failed to close file handle on %s.\n", filename);
     return 1;
   }
-  printf("Exiting normally\n");
   return 0;
 }
 
-lexer * lexer_new(FILE * script_file, const char * filename) {
+lexer * lexer_new(FILE * script_file, const char * filename, int max_buffer_size) {
   lexer * lex;
 
   lex = malloc(sizeof(* lex));
@@ -111,20 +103,18 @@ lexer * lexer_new(FILE * script_file, const char * filename) {
   lex->filename = filename;
   lex->line_number = 0;
   lex->position = 0;
-  lex->buffer = malloc(LEXER_BUFFER_SIZE * (sizeof(char)));
+  lex->max_buffer_size = max_buffer_size;
+  lex->buffer = malloc(lex->max_buffer_size * (sizeof(char)));
   lex->buffer_size = 0;
-  lex->token_buffer = malloc(LEXER_BUFFER_SIZE * (sizeof(char)));
+  lex->token_buffer = malloc(lex->max_buffer_size * (sizeof(char)));
   lex->token_position = 0;
   return lex;
 }
 
 char lexer_next_char(lexer * lex) {
-  printf("lexer_next_char\n");
   if(0 == lex->buffer_size || lex->position >= lex->buffer_size) {
-    printf("filling empty buffer\n");
-    lex->buffer_size = fread(lex->buffer, sizeof(char), LEXER_BUFFER_SIZE, lex->script_file);
+    lex->buffer_size = fread(lex->buffer, sizeof(char), lex->max_buffer_size, lex->script_file);
     if(0 == lex->buffer_size) {
-      printf("buffer empty,returning EOF\n");
       return EOF;
     }
   }
@@ -136,39 +126,36 @@ token * lexer_next_token(lexer * lex) {
 
   switch(lex->state) {
     case LEXER_DEFAULT:
-      printf("in state LEXER_DEFAULT\n");
       lex->current_char = lexer_next_char(lex);
       if(EOF == lex->current_char) {
-        printf("EOF found. Moving to LEXER_COMPLETE\n");
         lex->state = LEXER_COMPLETE;
         return lexer_next_token(lex);
       }
       if(is_int(lex->current_char)) {
-        printf("int found. Moving to LEXER_IN_INTEGER\n");
         lex->state = LEXER_IN_INTEGER;
         return lexer_next_token(lex);
       }
       if(is_whitespace(lex->current_char)) {
-        printf("skipping whitespace\n");
         return lexer_next_token(lex);
       }
+      lex->state = LEXER_ERROR;
+      return lexer_next_token(lex);
       break;
     case LEXER_IN_INTEGER:
-      printf("in state LEXER_IN_INTEGER\n");
       if(is_int(lex->current_char)) {
-        printf("appending current char to token buffer\n");
         lex->token_buffer[lex->token_position++] = lex->current_char;
         lex->current_char = lexer_next_char(lex);
         return lexer_next_token(lex);
       }
-      printf("end of integer, returning token\n");
       lex->token_position = 0;
       lex->state = LEXER_DEFAULT;
       return token_new(TOKEN_INTEGER, lex->token_buffer);
       break;
+    case LEXER_ERROR:
+      lex->state = LEXER_COMPLETE;
+      return lexer_next_token(lex);
     case LEXER_COMPLETE:
     default:
-      printf("in state LEXER_COMPLETE\n");
       lex->state = LEXER_COMPLETE;
       tok = token_new(TOKEN_EOF, NULL);
       break;
