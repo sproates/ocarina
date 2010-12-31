@@ -17,6 +17,12 @@ enum lexer_state {
 };
 
 typedef struct {
+  char * data;
+  int length;
+  int buffer_size;
+} string;
+
+typedef struct {
   enum lexer_state state;
   FILE * script_file;
   const char * filename;
@@ -24,15 +30,14 @@ typedef struct {
   int position;
   char * buffer;
   int buffer_size;
-  char * token_buffer;
-  int token_position;
+  string * token_buffer;
   char current_char;
   int max_buffer_size;
 } lexer;
 
 typedef struct {
   enum token_type type;
-  char * data;
+  string * data;
 } token;
 
 void print_usage(const char * exe);
@@ -41,10 +46,14 @@ lexer * lexer_new(FILE * script_file, const char * filename, int max_buffer_size
 char lexer_next_char(lexer * lex);
 void lexer_print(lexer * lex);
 token * lexer_next_token(lexer * lex);
-token * token_new(enum token_type type, char * data);
+token * token_new(enum token_type type, string * data);
 void token_print(token * tok);
+void token_delete(token * tok);
 int is_int(char c);
 int is_whitespace(char c);
+string * string_new(void);
+int string_append(string * s, char c);
+void string_delete(string * s);
 
 int main(int argc, const char ** argv) {
   if(argc < 2) {
@@ -81,6 +90,7 @@ int lexer_test(const char * filename) {
       break;
     }
     token_print(tok);
+    token_delete(tok);
   }
   closure = fclose(script_file);
   if(EOF == closure) {
@@ -106,8 +116,7 @@ lexer * lexer_new(FILE * script_file, const char * filename, int max_buffer_size
   lex->max_buffer_size = max_buffer_size;
   lex->buffer = malloc(lex->max_buffer_size * (sizeof(char)));
   lex->buffer_size = 0;
-  lex->token_buffer = malloc(lex->max_buffer_size * (sizeof(char)));
-  lex->token_position = 0;
+  lex->token_buffer = string_new();
   return lex;
 }
 
@@ -143,13 +152,13 @@ token * lexer_next_token(lexer * lex) {
       break;
     case LEXER_IN_INTEGER:
       if(is_int(lex->current_char)) {
-        lex->token_buffer[lex->token_position++] = lex->current_char;
+        string_append(lex->token_buffer, lex->current_char);
         lex->current_char = lexer_next_char(lex);
         return lexer_next_token(lex);
       }
-      lex->token_position = 0;
       lex->state = LEXER_DEFAULT;
-      return token_new(TOKEN_INTEGER, lex->token_buffer);
+      tok = token_new(TOKEN_INTEGER, lex->token_buffer);
+      lex->token_buffer = string_new();
       break;
     case LEXER_ERROR:
       lex->state = LEXER_COMPLETE;
@@ -163,7 +172,7 @@ token * lexer_next_token(lexer * lex) {
   return tok;
 }
 
-token * token_new(enum token_type type, char * data) {
+token * token_new(enum token_type type, string * data) {
   token * tok;
 
   tok = malloc(sizeof * tok);
@@ -174,6 +183,48 @@ token * token_new(enum token_type type, char * data) {
   tok->type = type;
   tok->data = data;
   return tok;
+}
+
+void token_delete(token * tok) {
+  if(NULL != tok) {
+    string_delete(tok->data);
+    free(tok);
+  }
+}
+
+void string_delete(string * s) {
+  if(NULL != s) {
+    free(s->data);
+    free(s);
+  }
+}
+
+string * string_new(void) {
+  string * s;
+  
+  s = malloc(sizeof(s));
+  if(NULL == s) {
+    printf("Failed to allocate space for string!\n");
+    return NULL;
+  }
+  s->data = malloc(1024 * sizeof(char));
+  if(NULL == s->data) {
+    printf("Failed to allocate space for string data!\n");
+    return NULL;
+  }
+  s->length = 0;
+  s->buffer_size = 1024;
+  return s;
+}
+
+int string_append(string * s, char c) {
+  if(s->length > s->buffer_size - 1) {
+    printf("String too long\n");
+    return 0;
+  }
+  s->data[s->length++] = c;
+  s->data[s->length] = 0;
+  return 1;
 }
 
 void lexer_print(lexer * lex) {
@@ -213,7 +264,9 @@ void token_print(token * tok) {
       break;
   }
   if(NULL != tok->data) {
-    printf("\nData: %s", tok->data);
+    printf("\nData: %s", tok->data->data);
+  } else {
+    printf("\nData: <empty>");
   }
   printf("\n]\n");
 }
