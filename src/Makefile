@@ -8,8 +8,8 @@ EXE = ocarina.exe
 
 all: ${EXE}
 
-${EXE}: main.o
-	$(CC) -o $@ main.o
+${EXE}: main.o string.o token.o lexer.o
+	$(CC) -o $@ *.o
 
 clean:
 	${RM} ${EXE}
@@ -17,3 +17,11 @@ clean:
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+main.o: lexer.h token.h
+
+lexer.o: lexer.h string.h token.h
+
+string.o: string.h
+
+token.o: token.h string.h
