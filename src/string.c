@@ -1,26 +1,24 @@
 #include "string.h"
-#include <stdlib.h>
+#include "memory.h"
 #include <stdio.h>
 
 void string_delete(string * s) {
-  if(NULL != s) {
-    free(s->data);
-    free(s);
+  if(0 != s) {
+    mem_free(s->data);
+    mem_free(s);
   }
 }
 
 string * string_new(void) {
   string * s;
 
-  s = malloc(sizeof(s));
-  if(NULL == s) {
+  if(0 == (s = mem_alloc(sizeof(s)))) {
     printf("Failed to allocate space for string!\n");
-    return NULL;
+    return 0;
   }
-  s->data = malloc(1024 * sizeof(char));
-  if(NULL == s->data) {
+  if(0 == (s->data = mem_alloc(1024 * sizeof(char)))) {
     printf("Failed to allocate space for string data!\n");
-    return NULL;
+    return 0;
   }
   s->length = 0;
   s->buffer_size = 1024;
@@ -29,7 +27,7 @@ string * string_new(void) {
 }
 
 int string_append(string * s, char c) {
-  if(s->length > s->buffer_size - 3) {
+  if(s->length > s->buffer_size - 2) {
     printf("String too long\n");
     return 0;
   }

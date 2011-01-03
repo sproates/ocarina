@@ -1,14 +1,13 @@
 #include "token.h"
-#include <stdlib.h>
+#include "memory.h"
 #include <stdio.h>
 
 token * token_new(enum token_type type, string * data) {
   token * tok;
 
-  tok = malloc(sizeof * tok);
-  if(NULL == tok) {
+  if(0 == (tok = mem_alloc(sizeof * tok))) {
     printf("Failed to allocate space for token!\n");
-    return NULL;
+    return 0;
   }
   tok->type = type;
   tok->data = data;
@@ -16,14 +15,14 @@ token * token_new(enum token_type type, string * data) {
 }
 
 void token_delete(token * tok) {
-  if(NULL != tok) {
+  if(0 != tok) {
     string_delete(tok->data);
-    free(tok);
+    mem_free(tok);
   }
 }
 
 void token_print(token * tok) {
-  printf("Token [\n");
+  printf("Token {\n\tType: ");
   switch(tok->type) {
     case TOKEN_INTEGER:
       printf("Integer");
@@ -34,14 +33,18 @@ void token_print(token * tok) {
     case TOKEN_STRING:
       printf("String");
       break;
+    case TOKEN_IDENTIFIER:
+      printf("Identifier");
+      break;
     default:
       printf("Unknown");
       break;
   }
-  if(NULL != tok->data) {
-    printf("\nData: %s", tok->data->data);
+  printf("\n\tData: ");
+  if(0 != tok->data) {
+    printf("%s", tok->data->data);
   } else {
-    printf("\nData: <empty>");
+    printf("<empty>");
   }
-  printf("\n]\n");
+  printf("\n}\n");
 }

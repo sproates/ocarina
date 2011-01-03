@@ -6,6 +6,7 @@
 enum token_type {
   TOKEN_INTEGER,
   TOKEN_EOF,
+  TOKEN_IDENTIFIER,
   TOKEN_STRING
 };
 

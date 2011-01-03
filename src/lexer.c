@@ -1,25 +1,31 @@
 #include "lexer.h"
-#include <stdlib.h>
+#include "memory.h"
 #include <stdio.h>
 
-lexer * lexer_new(FILE * script_file, const char * filename, int max_buffer_size) {
+lexer * lexer_new(FILE * script_file, const char * filename) {
   lexer * lex;
 
-  lex = malloc(sizeof(* lex));
-  if(NULL == lex) {
+  if(0 == (lex = mem_alloc(sizeof(* lex)))) {
     printf("Failed to allocate space for lexer!\n");
-    return NULL;
+    return 0;
   }
   lex->state = LEXER_DEFAULT;
   lex->script_file = script_file;
   lex->filename = filename;
   lex->line_number = 0;
   lex->position = 0;
-  lex->max_buffer_size = max_buffer_size;
-  lex->buffer = malloc(lex->max_buffer_size * (sizeof(char)));
+  lex->max_buffer_size = 1024;
+  lex->buffer = mem_alloc(lex->max_buffer_size * (sizeof(char)));
   lex->buffer_size = 0;
   lex->token_buffer = string_new();
   return lex;
+}
+
+void lexer_delete(lexer * lex) {
+  if(0 != lex) {
+    string_delete(lex->token_buffer);
+    mem_free(lex);
+  }
 }
 
 char lexer_next_char(lexer * lex) {
@@ -41,22 +47,23 @@ token * lexer_next_token(lexer * lex) {
       if(EOF == lex->current_char) {
         lex->state = LEXER_COMPLETE;
         return lexer_next_token(lex);
-      }
-      if(is_int(lex->current_char)) {
+      } else if(is_int(lex->current_char)) {
         lex->state = LEXER_IN_INTEGER;
         return lexer_next_token(lex);
-      }
-      if(is_whitespace(lex->current_char)) {
+      } else if(is_whitespace(lex->current_char)) {
         return lexer_next_token(lex);
-      }
-      if(is_string_delimiter(lex->current_char)) {
+      } else if(is_string_delimiter(lex->current_char)) {
         lex->state = LEXER_IN_STRING;
         lex->current_char = lexer_next_char(lex);
         return lexer_next_token(lex);
+      } else if(is_identifier_initial(lex->current_char)) {
+        lex->state = LEXER_IN_IDENTIFIER;
+        return lexer_next_token(lex);
+      } else {
+        lex->state = LEXER_ERROR;
+        return lexer_next_token(lex);
+        break;
       }
-      lex->state = LEXER_ERROR;
-      return lexer_next_token(lex);
-      break;
     case LEXER_IN_INTEGER:
       if(is_int(lex->current_char)) {
         string_append(lex->token_buffer, lex->current_char);
@@ -65,6 +72,16 @@ token * lexer_next_token(lexer * lex) {
       }
       lex->state = LEXER_DEFAULT;
       tok = token_new(TOKEN_INTEGER, lex->token_buffer);
+      lex->token_buffer = string_new();
+      break;
+    case LEXER_IN_IDENTIFIER:
+      if(is_identifier(lex->current_char)) {
+        string_append(lex->token_buffer, lex->current_char);
+        lex->current_char = lexer_next_char(lex);
+        return lexer_next_token(lex);
+      }
+      lex->state = LEXER_DEFAULT;
+      tok = token_new(TOKEN_IDENTIFIER, lex->token_buffer);
       lex->token_buffer = string_new();
       break;
     case LEXER_IN_STRING:
@@ -83,7 +100,7 @@ token * lexer_next_token(lexer * lex) {
     case LEXER_COMPLETE:
     default:
       lex->state = LEXER_COMPLETE;
-      tok = token_new(TOKEN_EOF, NULL);
+      tok = token_new(TOKEN_EOF, 0);
       break;
   }
   return tok;
@@ -121,5 +138,17 @@ int is_whitespace(char c) {
 }
 
 int is_string_delimiter(char c) {
-  return ('"' == c);
+  return (34 == c);
+}
+
+int is_alpha(char c) {
+  return ((65 <= c && 90 >= c) || (97 <= c && 122 >= c));
+}
+
+int is_identifier(char c) {
+  return (is_alpha(c) || is_int(c) || 95 == c);
+}
+
+int is_identifier_initial(char c) {
+  return (is_alpha(c) || 95 == c);
 }

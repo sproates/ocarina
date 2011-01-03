@@ -1,9 +1,6 @@
 #include <stdio.h>
-
 #include "token.h"
 #include "lexer.h"
-
-#define LEXER_BUFFER_SIZE 1024
 
 void print_usage(const char * exe);
 int lexer_test(const char * filename);
@@ -23,7 +20,6 @@ void print_usage(const char * exe) {
 
 int lexer_test(const char * filename) {
   FILE * script_file;
-  int closure;
   lexer * lex;
   token * tok;
 
@@ -32,7 +28,7 @@ int lexer_test(const char * filename) {
     printf("Could not open %s for reading.\n", filename);
     return 1;
   }
-  lex = lexer_new(script_file, filename, LEXER_BUFFER_SIZE);
+  lex = lexer_new(script_file, filename);
   if(NULL == lex) {
     printf("Unable to start lexing\n");
     return 1;
@@ -40,15 +36,15 @@ int lexer_test(const char * filename) {
   while(1) {
     tok = lexer_next_token(lex);
     if(NULL == tok || TOKEN_EOF == tok->type) {
+      token_delete(tok);
       break;
     }
     token_print(tok);
     token_delete(tok);
   }
-  closure = fclose(script_file);
-  if(EOF == closure) {
+  if(EOF == fclose(script_file)) {
     printf("Failed to close file handle on %s.\n", filename);
-    return 1;
   }
+  lexer_delete(lex);
   return 0;
 }

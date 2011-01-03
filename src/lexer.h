@@ -27,12 +27,16 @@ typedef struct {
   int max_buffer_size;
 } lexer;
 
-lexer * lexer_new(FILE * script_file, const char * filename, int max_buffer_size);
+lexer * lexer_new(FILE * script_file, const char * filename);
+void lexer_delete(lexer * lex);
 char lexer_next_char(lexer * lex);
 void lexer_print(lexer * lex);
 token * lexer_next_token(lexer * lex);
 int is_int(char c);
 int is_whitespace(char c);
 int is_string_delimiter(char c);
+int is_identifier(char c);
+int is_identifier_initial(char c);
+int is_alpha(char c);
 
 #endif
