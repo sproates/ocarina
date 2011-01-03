@@ -31,6 +31,9 @@ void token_print(token * tok) {
     case TOKEN_EOF:
       printf("EOF");
       break;
+    case TOKEN_STRING:
+      printf("String");
+      break;
     default:
       printf("Unknown");
       break;

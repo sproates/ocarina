@@ -5,7 +5,8 @@
 
 enum token_type {
   TOKEN_INTEGER,
-  TOKEN_EOF
+  TOKEN_EOF,
+  TOKEN_STRING
 };
 
 typedef struct {

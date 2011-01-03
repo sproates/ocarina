@@ -49,6 +49,11 @@ token * lexer_next_token(lexer * lex) {
       if(is_whitespace(lex->current_char)) {
         return lexer_next_token(lex);
       }
+      if(is_string_delimiter(lex->current_char)) {
+        lex->state = LEXER_IN_STRING;
+        lex->current_char = lexer_next_char(lex);
+        return lexer_next_token(lex);
+      }
       lex->state = LEXER_ERROR;
       return lexer_next_token(lex);
       break;
@@ -60,6 +65,16 @@ token * lexer_next_token(lexer * lex) {
       }
       lex->state = LEXER_DEFAULT;
       tok = token_new(TOKEN_INTEGER, lex->token_buffer);
+      lex->token_buffer = string_new();
+      break;
+    case LEXER_IN_STRING:
+      if(!is_string_delimiter(lex->current_char)) {
+        string_append(lex->token_buffer, lex->current_char);
+        lex->current_char = lexer_next_char(lex);
+        return lexer_next_token(lex);
+      }
+      lex->state = LEXER_DEFAULT;
+      tok = token_new(TOKEN_STRING, lex->token_buffer);
       lex->token_buffer = string_new();
       break;
     case LEXER_ERROR:
@@ -103,4 +118,8 @@ int is_int(char c) {
 
 int is_whitespace(char c) {
   return (9 == c || 10 == c || 13 == c || 32 == c);
+}
+
+int is_string_delimiter(char c) {
+  return ('"' == c);
 }

@@ -10,7 +10,8 @@ enum lexer_state {
   LEXER_DEFAULT,
   LEXER_ERROR,
   LEXER_IN_IDENTIFIER,
-  LEXER_IN_INTEGER
+  LEXER_IN_INTEGER,
+  LEXER_IN_STRING
 };
 
 typedef struct {
@@ -32,5 +33,6 @@ void lexer_print(lexer * lex);
 token * lexer_next_token(lexer * lex);
 int is_int(char c);
 int is_whitespace(char c);
+int is_string_delimiter(char c);
 
 #endif
