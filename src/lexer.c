@@ -2,6 +2,22 @@
 #include "memory.h"
 #include <stdio.h>
 
+char _lexer_next_char(lexer * lex);
+int _is_int(char c);
+int _is_whitespace(char c);
+int _is_string_delimiter(char c);
+int _is_identifier(char c);
+int _is_identifier_initial(char c);
+int _is_alpha(char c);
+
+/**
+ * Create a new lexer instance.
+ *
+ * @param script_file Handle to an open source file.
+ * @param filename Name of the source file.
+ *
+ * @return A pointer to a lexer on success, zero on failure.
+ */
 lexer * lexer_new(FILE * script_file, const char * filename) {
   lexer * lex;
 
@@ -21,6 +37,11 @@ lexer * lexer_new(FILE * script_file, const char * filename) {
   return lex;
 }
 
+/**
+ * Destructs a lexer.
+ *
+ * @param lex The lexer to delete.
+ */
 void lexer_delete(lexer * lex) {
   if(0 != lex) {
     string_delete(lex->token_buffer);
@@ -28,7 +49,7 @@ void lexer_delete(lexer * lex) {
   }
 }
 
-char lexer_next_char(lexer * lex) {
+char _lexer_next_char(lexer * lex) {
   if(0 == lex->buffer_size || lex->position >= lex->buffer_size) {
     lex->buffer_size = fread(lex->buffer, sizeof(char), lex->max_buffer_size, lex->script_file);
     if(0 == lex->buffer_size) {
@@ -38,25 +59,32 @@ char lexer_next_char(lexer * lex) {
   return lex->buffer[lex->position++];
 }
 
+/**
+ * Obtains the next token from a lexer.
+ *
+ * @param lex The lexer from which to obtain a token.
+ *
+ * @return A token.
+ */
 token * lexer_next_token(lexer * lex) {
   token * tok;
 
   switch(lex->state) {
     case LEXER_DEFAULT:
-      lex->current_char = lexer_next_char(lex);
+      lex->current_char = _lexer_next_char(lex);
       if(EOF == lex->current_char) {
         lex->state = LEXER_COMPLETE;
         return lexer_next_token(lex);
-      } else if(is_int(lex->current_char)) {
+      } else if(_is_int(lex->current_char)) {
         lex->state = LEXER_IN_INTEGER;
         return lexer_next_token(lex);
-      } else if(is_whitespace(lex->current_char)) {
+      } else if(_is_whitespace(lex->current_char)) {
         return lexer_next_token(lex);
-      } else if(is_string_delimiter(lex->current_char)) {
+      } else if(_is_string_delimiter(lex->current_char)) {
         lex->state = LEXER_IN_STRING;
-        lex->current_char = lexer_next_char(lex);
+        lex->current_char = _lexer_next_char(lex);
         return lexer_next_token(lex);
-      } else if(is_identifier_initial(lex->current_char)) {
+      } else if(_is_identifier_initial(lex->current_char)) {
         lex->state = LEXER_IN_IDENTIFIER;
         return lexer_next_token(lex);
       } else {
@@ -65,9 +93,9 @@ token * lexer_next_token(lexer * lex) {
         break;
       }
     case LEXER_IN_INTEGER:
-      if(is_int(lex->current_char)) {
+      if(_is_int(lex->current_char)) {
         string_append(lex->token_buffer, lex->current_char);
-        lex->current_char = lexer_next_char(lex);
+        lex->current_char = _lexer_next_char(lex);
         return lexer_next_token(lex);
       }
       lex->state = LEXER_DEFAULT;
@@ -75,9 +103,9 @@ token * lexer_next_token(lexer * lex) {
       lex->token_buffer = string_new();
       break;
     case LEXER_IN_IDENTIFIER:
-      if(is_identifier(lex->current_char)) {
+      if(_is_identifier(lex->current_char)) {
         string_append(lex->token_buffer, lex->current_char);
-        lex->current_char = lexer_next_char(lex);
+        lex->current_char = _lexer_next_char(lex);
         return lexer_next_token(lex);
       }
       lex->state = LEXER_DEFAULT;
@@ -85,9 +113,9 @@ token * lexer_next_token(lexer * lex) {
       lex->token_buffer = string_new();
       break;
     case LEXER_IN_STRING:
-      if(!is_string_delimiter(lex->current_char)) {
+      if(!_is_string_delimiter(lex->current_char)) {
         string_append(lex->token_buffer, lex->current_char);
-        lex->current_char = lexer_next_char(lex);
+        lex->current_char = _lexer_next_char(lex);
         return lexer_next_token(lex);
       }
       lex->state = LEXER_DEFAULT;
@@ -129,26 +157,26 @@ void lexer_print(lexer * lex) {
   printf("\n]\n");
 }
 
-int is_int(char c) {
+int _is_int(char c) {
   return (48 <= c && 57 >= c);
 }
 
-int is_whitespace(char c) {
+int _is_whitespace(char c) {
   return (9 == c || 10 == c || 13 == c || 32 == c);
 }
 
-int is_string_delimiter(char c) {
+int _is_string_delimiter(char c) {
   return (34 == c);
 }
 
-int is_alpha(char c) {
+int _is_alpha(char c) {
   return ((65 <= c && 90 >= c) || (97 <= c && 122 >= c));
 }
 
-int is_identifier(char c) {
-  return (is_alpha(c) || is_int(c) || 95 == c);
+int _is_identifier(char c) {
+  return (_is_alpha(c) || _is_int(c) || 95 == c);
 }
 
-int is_identifier_initial(char c) {
-  return (is_alpha(c) || 95 == c);
+int _is_identifier_initial(char c) {
+  return (_is_alpha(c) || 95 == c);
 }
