@@ -14,11 +14,10 @@ int _is_alpha(char c);
  * Create a new lexer instance.
  *
  * @param script_file Handle to an open source file.
- * @param filename Name of the source file.
  *
  * @return A pointer to a lexer on success, zero on failure.
  */
-lexer * lexer_new(FILE * script_file, const char * filename) {
+lexer * lexer_new(FILE * script_file) {
   lexer * lex;
 
   if(0 == (lex = mem_alloc(sizeof(* lex)))) {
@@ -27,8 +26,6 @@ lexer * lexer_new(FILE * script_file, const char * filename) {
   }
   lex->state = LEXER_DEFAULT;
   lex->script_file = script_file;
-  lex->filename = filename;
-  lex->line_number = 0;
   lex->position = 0;
   lex->max_buffer_size = 1024;
   lex->buffer = mem_alloc(lex->max_buffer_size * (sizeof(char)));
@@ -135,11 +132,8 @@ token * lexer_next_token(lexer * lex) {
 }
 
 void lexer_print(lexer * lex) {
-  printf("Lexer [\n");
-  printf("Filename: %s\n", lex->filename);
-  printf("Line: %d\n", lex->line_number);
-  printf("Position: %d\n", lex->position);
-  printf("State: ");
+  printf("Lexer {\n");
+  printf("\tState: ");
   switch(lex->state) {
     case LEXER_COMPLETE:
       printf("Complete");
@@ -154,7 +148,7 @@ void lexer_print(lexer * lex) {
       printf("Unknown");
       break;
   }
-  printf("\n]\n");
+  printf("\n}\n");
 }
 
 int _is_int(char c) {

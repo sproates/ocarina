@@ -17,8 +17,6 @@ enum lexer_state {
 typedef struct {
   enum lexer_state state;
   FILE * script_file;
-  const char * filename;
-  int line_number;
   int position;
   char * buffer;
   int buffer_size;
@@ -27,7 +25,7 @@ typedef struct {
   int max_buffer_size;
 } lexer;
 
-lexer * lexer_new(FILE * script_file, const char * filename);
+lexer * lexer_new(FILE * script_file);
 void lexer_delete(lexer * lex);
 void lexer_print(lexer * lex);
 token * lexer_next_token(lexer * lex);

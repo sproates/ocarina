@@ -28,7 +28,7 @@ int lexer_test(const char * filename) {
     printf("Could not open %s for reading.\n", filename);
     return 1;
   }
-  lex = lexer_new(script_file, filename);
+  lex = lexer_new(script_file);
   if(NULL == lex) {
     printf("Unable to start lexing\n");
     return 1;
