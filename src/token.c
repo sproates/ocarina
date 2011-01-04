@@ -5,20 +5,24 @@
 token * token_new(enum token_type type, string * data) {
   token * tok;
 
-  if(0 == (tok = mem_alloc(sizeof * tok))) {
+  printf("token_new()\n");
+  if(0 == (tok = mem_alloc(sizeof(* tok)))) {
     printf("Failed to allocate space for token!\n");
     return 0;
   }
   tok->type = type;
   tok->data = data;
+  printf("end token_new()\n");
   return tok;
 }
 
 void token_delete(token * tok) {
+  printf("token_delete()\n");
   if(0 != tok) {
     string_delete(tok->data);
-    mem_free(tok);
+    mem_free(tok, 0);
   }
+  printf("end token_delete()\n");
 }
 
 void token_print(token * tok) {
