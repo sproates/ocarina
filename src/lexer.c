@@ -11,6 +11,7 @@ int _is_identifier(char c);
 int _is_identifier_initial(char c);
 int _is_alpha(char c);
 int _is_control_character(char c);
+int _is_keyword(string * s);
 token * _token_control_character(char c);
 
 /**
@@ -33,7 +34,7 @@ lexer * lexer_new(FILE * script_file) {
   lex->max_buffer_size = 1024;
   lex->buffer = mem_alloc(lex->max_buffer_size * (sizeof(char)));
   lex->buffer_size = 0;
-  lex->token_buffer = string_new();
+  lex->token_buffer = string_new(0);
   return lex;
 }
 
@@ -102,7 +103,7 @@ token * lexer_next_token(lexer * lex) {
       }
       lex->state = LEXER_DEFAULT;
       tok = token_new(TOKEN_INTEGER, lex->token_buffer);
-      lex->token_buffer = string_new();
+      lex->token_buffer = string_new(0);
       break;
     case LEXER_IN_IDENTIFIER:
       if(_is_identifier(lex->current_char)) {
@@ -111,8 +112,12 @@ token * lexer_next_token(lexer * lex) {
         return lexer_next_token(lex);
       }
       lex->state = LEXER_DEFAULT;
-      tok = token_new(TOKEN_IDENTIFIER, lex->token_buffer);
-      lex->token_buffer = string_new();
+      if(_is_keyword(lex->token_buffer)) {
+        tok = token_new(TOKEN_KEYWORD, lex->token_buffer);
+      } else {
+        tok = token_new(TOKEN_IDENTIFIER, lex->token_buffer);
+      }
+      lex->token_buffer = string_new(0);
       break;
     case LEXER_IN_STRING:
       if(!_is_string_delimiter(lex->current_char)) {
@@ -122,7 +127,7 @@ token * lexer_next_token(lexer * lex) {
       }
       lex->state = LEXER_DEFAULT;
       tok = token_new(TOKEN_STRING, lex->token_buffer);
-      lex->token_buffer = string_new();
+      lex->token_buffer = string_new(0);
       break;
     case LEXER_ERROR:
       tok = token_new(TOKEN_ERROR, 0);
@@ -210,4 +215,8 @@ token * _token_control_character(char c) {
       break;
   }
   return token_new(type, 0);
+}
+
+int _is_keyword(string * s) {
+  return (string_equals_char(s, "if") || string_equals_char(s, "for"));
 }

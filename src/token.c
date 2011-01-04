@@ -24,6 +24,15 @@ void token_delete(token * tok) {
 void token_print(token * tok) {
   printf("Token {\n\tType: ");
   switch(tok->type) {
+    case TOKEN_CLOSE_BRACE:
+      printf("Close brace");
+      break;
+    case TOKEN_CLOSE_BRACKET:
+      printf("Close bracket");
+      break;
+    case TOKEN_CLOSE_PARENTHESIS:
+      printf("Close parenthesis");
+      break;
     case TOKEN_EOF:
       printf("EOF");
       break;
@@ -35,6 +44,18 @@ void token_print(token * tok) {
       break;
     case TOKEN_INTEGER:
       printf("Integer");
+      break;
+    case TOKEN_KEYWORD:
+      printf("Keyword");
+      break;
+    case TOKEN_OPEN_BRACE:
+      printf("Open brace");
+      break;
+    case TOKEN_OPEN_BRACKET:
+      printf("Open bracket");
+      break;
+    case TOKEN_OPEN_PARENTHESIS:
+      printf("Open parenthesis");
       break;
     case TOKEN_STRING:
       printf("String");

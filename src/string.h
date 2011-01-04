@@ -7,8 +7,10 @@ typedef struct {
   int buffer_size;
 } string;
 
-string * string_new(void);
+string * string_new(const char * c);
 int string_append(string * s, char c);
 void string_delete(string * s);
+int string_equals(string * s1, string * s2);
+int string_equals_char(string * s, const char * c);
 
 #endif
