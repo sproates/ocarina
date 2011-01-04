@@ -24,18 +24,18 @@ int lexer_test(const char * filename) {
   token * tok;
 
   script_file = fopen(filename, "r");
-  if(NULL == script_file) {
+  if(0 == script_file) {
     printf("Could not open %s for reading.\n", filename);
     return 1;
   }
   lex = lexer_new(script_file);
-  if(NULL == lex) {
+  if(0 == lex) {
     printf("Unable to start lexing\n");
     return 1;
   }
   while(1) {
     tok = lexer_next_token(lex);
-    if(NULL == tok || TOKEN_EOF == tok->type) {
+    if(0 == tok || TOKEN_EOF == tok->type) {
       token_delete(tok);
       break;
     }
