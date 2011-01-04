@@ -9,9 +9,8 @@ int main(int argc, const char ** argv) {
   if(argc < 2) {
     print_usage(argv[0]);
     return 1;
-  } else {
-    return lexer_test(argv[1]);
   }
+  return lexer_test(argv[1]);
 }
 
 void print_usage(const char * exe) {
@@ -23,13 +22,11 @@ int lexer_test(const char * filename) {
   lexer * lex;
   token * tok;
 
-  script_file = fopen(filename, "r");
-  if(0 == script_file) {
+  if(0 == (script_file = fopen(filename, "r"))) {
     printf("Could not open %s for reading.\n", filename);
     return 1;
   }
-  lex = lexer_new(script_file);
-  if(0 == lex) {
+  if(0 == (lex = lexer_new(script_file))) {
     printf("Unable to start lexing\n");
     return 1;
   }

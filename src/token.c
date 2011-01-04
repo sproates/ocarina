@@ -24,17 +24,20 @@ void token_delete(token * tok) {
 void token_print(token * tok) {
   printf("Token {\n\tType: ");
   switch(tok->type) {
-    case TOKEN_INTEGER:
-      printf("Integer");
-      break;
     case TOKEN_EOF:
       printf("EOF");
       break;
-    case TOKEN_STRING:
-      printf("String");
+    case TOKEN_ERROR:
+      printf("Error");
       break;
     case TOKEN_IDENTIFIER:
       printf("Identifier");
+      break;
+    case TOKEN_INTEGER:
+      printf("Integer");
+      break;
+    case TOKEN_STRING:
+      printf("String");
       break;
     default:
       printf("Unknown");

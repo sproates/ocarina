@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "memory.h"
+#include "token.h"
 #include <stdio.h>
 
 char _lexer_next_char(lexer * lex);
@@ -9,6 +10,8 @@ int _is_string_delimiter(char c);
 int _is_identifier(char c);
 int _is_identifier_initial(char c);
 int _is_alpha(char c);
+int _is_control_character(char c);
+token * _token_control_character(char c);
 
 /**
  * Create a new lexer instance.
@@ -84,10 +87,12 @@ token * lexer_next_token(lexer * lex) {
       } else if(_is_identifier_initial(lex->current_char)) {
         lex->state = LEXER_IN_IDENTIFIER;
         return lexer_next_token(lex);
+      } else if(_is_control_character(lex->current_char)) {
+        tok = _token_control_character(lex->current_char);
+        break;
       } else {
         lex->state = LEXER_ERROR;
         return lexer_next_token(lex);
-        break;
       }
     case LEXER_IN_INTEGER:
       if(_is_int(lex->current_char)) {
@@ -120,8 +125,8 @@ token * lexer_next_token(lexer * lex) {
       lex->token_buffer = string_new();
       break;
     case LEXER_ERROR:
-      lex->state = LEXER_COMPLETE;
-      return lexer_next_token(lex);
+      tok = token_new(TOKEN_ERROR, 0);
+      break;
     case LEXER_COMPLETE:
     default:
       lex->state = LEXER_COMPLETE;
@@ -173,4 +178,36 @@ int _is_identifier(char c) {
 
 int _is_identifier_initial(char c) {
   return (_is_alpha(c) || 95 == c);
+}
+
+int _is_control_character(char c) {
+  return ('(' == c || ')' == c || '[' == c || ']' == c || '{' == c || '}' == c);
+}
+
+token * _token_control_character(char c) {
+  enum token_type type;
+  switch(c) {
+    case '}':
+      type = TOKEN_CLOSE_BRACE;
+      break;
+    case ']':
+      type = TOKEN_CLOSE_BRACKET;
+      break;
+    case ')':
+      type = TOKEN_CLOSE_PARENTHESIS;
+      break;
+    case '[':
+      type = TOKEN_OPEN_BRACKET;
+      break;
+    case '{':
+      type = TOKEN_OPEN_BRACE;
+      break;
+    case '(':
+      type = TOKEN_OPEN_PARENTHESIS;
+      break;
+    default:
+      type = TOKEN_ERROR;
+      break;
+  }
+  return token_new(type, 0);
 }
