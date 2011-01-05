@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 void * mem_alloc(size_t size);
-void mem_free(void * p, size_t amount);
-size_t get_allocated_memory(void);
+void mem_free(void * p);
 
 #endif

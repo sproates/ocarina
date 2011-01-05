@@ -24,9 +24,7 @@ token * _token_control_character(char c);
 lexer * lexer_new(FILE * script_file) {
   lexer * lex;
 
-  printf("lexer_new()\n");
   if(0 == (lex = mem_alloc(sizeof(* lex)))) {
-    printf("Failed to allocate space for lexer!\n");
     return 0;
   }
   lex->state = LEXER_DEFAULT;
@@ -36,7 +34,6 @@ lexer * lexer_new(FILE * script_file) {
   lex->buffer = mem_alloc(lex->max_buffer_size * (sizeof(char)));
   lex->buffer_size = 0;
   lex->token_buffer = string_new(0);
-  printf("end lexer_new()\n");
   return lex;
 }
 
@@ -46,13 +43,11 @@ lexer * lexer_new(FILE * script_file) {
  * @param lex The lexer to delete.
  */
 void lexer_delete(lexer * lex) {
-  printf("lexer_delete()\n");
   if(0 != lex) {
     string_delete(lex->token_buffer);
-    mem_free(lex->buffer, lex->max_buffer_size * sizeof(char));
-    mem_free(lex, 0);
+    mem_free(lex->buffer);
+    mem_free(lex);
   }
-  printf("end lexer_delete()\n");
 }
 
 char _lexer_next_char(lexer * lex) {
