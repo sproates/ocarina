@@ -3,7 +3,7 @@
 
 #include "string.h"
 
-enum token_type {
+typedef enum {
   TOKEN_CLOSE_BRACE,
   TOKEN_CLOSE_BRACKET,
   TOKEN_CLOSE_PARENTHESIS,
@@ -16,14 +16,14 @@ enum token_type {
   TOKEN_OPEN_BRACKET,
   TOKEN_OPEN_PARENTHESIS,
   TOKEN_STRING
-};
+} token_type;
 
 typedef struct {
-  enum token_type type;
+  token_type type;
   string * data;
 } token;
 
-token * token_new(enum token_type type, string * data);
+token * token_new(token_type type, string * data);
 void token_print(token * tok);
 void token_delete(token * tok);
 

@@ -144,7 +144,7 @@ int lexer_tests(void) {
   }
   printf("Created lexer\n");
   while(1) {
-    tok = lexer_next_token(lex);
+    tok = lexer_next(lex);
     printf("Got token\n");
     token_print(tok);
     if(0 == tok || TOKEN_EOF == tok->type) {

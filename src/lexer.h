@@ -5,17 +5,17 @@
 #include "token.h"
 #include <stdio.h>
 
-enum lexer_state {
-  LEXER_COMPLETE,
-  LEXER_DEFAULT,
-  LEXER_ERROR,
-  LEXER_IN_IDENTIFIER,
-  LEXER_IN_INTEGER,
-  LEXER_IN_STRING
-};
+typedef enum  {
+  LEX_DONE,
+  LEX_DEF,
+  LEX_ERR,
+  LEX_IN_ID,
+  LEX_IN_INT,
+  LEX_IN_STR
+} lexer_state;
 
 typedef struct {
-  enum lexer_state state;
+  lexer_state state;
   FILE * script_file;
   int position;
   char * buffer;
@@ -28,6 +28,8 @@ typedef struct {
 lexer * lexer_new(FILE * script_file);
 void lexer_delete(lexer * lex);
 void lexer_print(lexer * lex);
-token * lexer_next_token(lexer * lex);
+token * lexer_next(lexer * lex);
+lexer * lexer_set_state(lexer * lex, lexer_state state);
+lexer * lexer_set_current_char(lexer * lex, const char c);
 
 #endif

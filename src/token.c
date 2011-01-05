@@ -2,7 +2,7 @@
 #include "memory.h"
 #include <stdio.h>
 
-token * token_new(enum token_type type, string * data) {
+token * token_new(token_type type, string * data) {
   token * tok;
 
   if(0 == (tok = mem_alloc(sizeof(* tok)))) {
