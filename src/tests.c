@@ -50,7 +50,6 @@ int main(void) {
 
 int string_tests(void) {
   string * s;
-  int result;
 
   printf("Running string tests...\n");
 
@@ -70,8 +69,7 @@ int string_tests(void) {
   test_pass();
 
   printf("string_append()\n");
-  result = string_append(s, '!');
-  if(0 == result) {
+  if(0 == string_append(s, '!')) {
     printf("Append failed\n");
     test_fail();
     return 1;
@@ -139,22 +137,31 @@ int lexer_tests(void) {
     printf("Could not open source file for reading.\n");
     return 1;
   }
+  printf("Opened script file\n");
   if(0 == (lex = lexer_new(script_file))) {
     printf("Unable to start lexing\n");
     return 1;
   }
+  printf("Created lexer\n");
   while(1) {
     tok = lexer_next_token(lex);
+    printf("Got token\n");
+    token_print(tok);
     if(0 == tok || TOKEN_EOF == tok->type) {
+      printf("Deleting token and exiting lexer\n");
       token_delete(tok);
       break;
     }
+    printf("Deleting token\n");
     token_delete(tok);
+    printf("Lexing...\n");
   }
+  printf("Finished lexing\n");
   if(EOF == fclose(script_file)) {
     printf("Failed to close file handle on source file.\n");
     return 1;
   }
+  printf("Closed source file\n");
   lexer_delete(lex);
 
   printf("Completed lexer tests\n");

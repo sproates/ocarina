@@ -8,8 +8,9 @@ typedef struct {
 } string;
 
 string * string_new(const char * c);
-int string_append(string * s, char c);
-int string_append_string(string * s1, string * s2);
+string * string_append(string * s, char c);
+string * string_append_string(string * s1, string * s2);
+string * string_append_char(string * s, const char * c);
 void string_delete(string * s);
 int string_equals(string * s1, string * s2);
 int string_equals_char(string * s, const char * c);

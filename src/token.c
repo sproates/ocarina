@@ -14,6 +14,7 @@ token * token_new(enum token_type type, string * data) {
 }
 
 void token_delete(token * tok) {
+  printf("token_delete()\n");
   if(0 != tok) {
     string_delete(tok->data);
     mem_free(tok);

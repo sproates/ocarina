@@ -97,7 +97,10 @@ token * lexer_next_token(lexer * lex) {
       }
     case LEXER_IN_INTEGER:
       if(_is_int(lex->current_char)) {
-        string_append(lex->token_buffer, lex->current_char);
+        if(0 == string_append(lex->token_buffer, lex->current_char)) {
+          lex->state = LEXER_ERROR;
+          return lexer_next_token(lex);
+        }
         lex->current_char = _lexer_next_char(lex);
         return lexer_next_token(lex);
       }
@@ -107,7 +110,10 @@ token * lexer_next_token(lexer * lex) {
       break;
     case LEXER_IN_IDENTIFIER:
       if(_is_identifier(lex->current_char)) {
-        string_append(lex->token_buffer, lex->current_char);
+        if(0 == string_append(lex->token_buffer, lex->current_char)) {
+          lex->state = LEXER_ERROR;
+          return lexer_next_token(lex);
+        }
         lex->current_char = _lexer_next_char(lex);
         return lexer_next_token(lex);
       }
@@ -121,7 +127,10 @@ token * lexer_next_token(lexer * lex) {
       break;
     case LEXER_IN_STRING:
       if(!_is_string_delimiter(lex->current_char)) {
-        string_append(lex->token_buffer, lex->current_char);
+        if(0 == string_append(lex->token_buffer, lex->current_char)) {
+          lex->state = LEXER_ERROR;
+          return lexer_next_token(lex);
+        }
         lex->current_char = _lexer_next_char(lex);
         return lexer_next_token(lex);
       }

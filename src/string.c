@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void string_delete(string * s) {
-  if(0 != s) {
+  if(s) {
     mem_free(s->data);
     mem_free(s);
   }
@@ -11,8 +11,6 @@ void string_delete(string * s) {
 
 string * string_new(const char * c) {
   string * s;
-  int i;
-
   if(0 == (s = mem_alloc(sizeof(s)))) {
     return 0;
   }
@@ -22,34 +20,35 @@ string * string_new(const char * c) {
   s->length = 0;
   s->buffer_size = 1024;
   s->data[s->length] = 0;
-  if(c) {
-    for(i = 0; c[i]; i++) {
-      string_append(s, c[i]);
-    }
-  }
-  return s;
+  return string_append_char(s, c);
 }
 
-int string_append(string * s, char c) {
+string * string_append(string * s, char c) {
   if(s->length > s->buffer_size - 2) {
     s->buffer_size += 1024;
-    if(0 == (s->data = realloc(s->data, s->buffer_size * sizeof(char)))) {
+    if(0 == (s->data = mem_realloc(s->data, s->buffer_size * sizeof(char)))) {
       return 0;
     }
   }
   s->data[s->length++] = c;
   s->data[s->length] = 0;
-  return 1;
+  return s;
 }
 
-int string_append_string(string * s1, string * s2) {
+string * string_append_char(string * s, const char * c) {
   int i;
-  for(i = 0; i < s2->length; i++) {
-    if(0 == string_append(s1, s2->data[i])) {
-      return 0;
+  if(c) {
+    for(i = 0; c[i]; i++) {
+      if(0 == string_append(s, c[i])) {
+        return 0;
+      }
     }
   }
-  return 1;
+  return s;
+}
+
+string * string_append_string(string * s1, string * s2) {
+  return string_append_char(s1, s2->data);
 }
 
 int string_equals(string * s1, string * s2) {
