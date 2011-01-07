@@ -24,40 +24,40 @@ void token_delete(token * tok) {
 void token_print(token * tok) {
   printf("Token {\n\tType: ");
   switch(tok->type) {
-    case TOKEN_CLOSE_BRACE:
+    case TOK_CL_BC:
       printf("Close brace");
       break;
-    case TOKEN_CLOSE_BRACKET:
+    case TOK_CL_BK:
       printf("Close bracket");
       break;
-    case TOKEN_CLOSE_PARENTHESIS:
+    case TOK_CL_PA:
       printf("Close parenthesis");
       break;
-    case TOKEN_EOF:
+    case TOK_EOF:
       printf("EOF");
       break;
-    case TOKEN_ERROR:
+    case TOK_ERR:
       printf("Error");
       break;
-    case TOKEN_IDENTIFIER:
+    case TOK_ID:
       printf("Identifier");
       break;
-    case TOKEN_INTEGER:
+    case TOK_INT:
       printf("Integer");
       break;
-    case TOKEN_KEYWORD:
+    case TOK_KEY:
       printf("Keyword");
       break;
-    case TOKEN_OPEN_BRACE:
+    case TOK_OP_BC:
       printf("Open brace");
       break;
-    case TOKEN_OPEN_BRACKET:
+    case TOK_OP_BK:
       printf("Open bracket");
       break;
-    case TOKEN_OPEN_PARENTHESIS:
+    case TOK_OP_PA:
       printf("Open parenthesis");
       break;
-    case TOKEN_STRING:
+    case TOK_STR:
       printf("String");
       break;
     default:

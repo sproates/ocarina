@@ -160,7 +160,7 @@ token * lexer_next(lexer * lex) {
         }
         return lexer_next(lexer_advance(lex));
       }
-      return _token_new(lex, TOKEN_INTEGER, LEX_DEF);
+      return _token_new(lex, TOK_INT, LEX_DEF);
     case LEX_IN_ID:
       if(_is_id(lex->current_char)) {
         if(0 == string_append(lex->token_buffer, lex->current_char)) {
@@ -169,9 +169,9 @@ token * lexer_next(lexer * lex) {
         return lexer_next(lexer_advance(lex));
       }
       if(_is_keyword(lex->token_buffer)) {
-        return _token_new(lex, TOKEN_KEYWORD, LEX_DEF);
+        return _token_new(lex, TOK_KEY, LEX_DEF);
       }
-      return _token_new(lex, TOKEN_IDENTIFIER, LEX_DEF);
+      return _token_new(lex, TOK_ID, LEX_DEF);
     case LEX_IN_STR:
       if(!_is_str_end(lex->current_char)) {
         if(0 == string_append(lex->token_buffer, lex->current_char)) {
@@ -179,12 +179,12 @@ token * lexer_next(lexer * lex) {
         }
         return lexer_next(lexer_advance(lex));
       }
-      return _token_new(lex, TOKEN_STRING, LEX_ERR);
+      return _token_new(lex, TOK_STR, LEX_ERR);
     case LEX_ERR:
-      return _token_new(lex, TOKEN_ERROR, LEX_DEF);
+      return _token_new(lex, TOK_ERR, LEX_DEF);
     case LEX_DONE:
     default:
-      return _token_new(lex, TOKEN_EOF, LEX_DONE);
+      return _token_new(lex, TOK_EOF, LEX_DONE);
   }
   return 0;
 }
@@ -246,25 +246,25 @@ token * _token_ctrl_char(char c) {
   token_type type;
   switch(c) {
     case '}':
-      type = TOKEN_CLOSE_BRACE;
+      type = TOK_CL_BC;
       break;
     case ']':
-      type = TOKEN_CLOSE_BRACKET;
+      type = TOK_CL_BK;
       break;
     case ')':
-      type = TOKEN_CLOSE_PARENTHESIS;
+      type = TOK_CL_PA;
       break;
     case '[':
-      type = TOKEN_OPEN_BRACKET;
+      type = TOK_OP_BK;
       break;
     case '{':
-      type = TOKEN_OPEN_BRACE;
+      type = TOK_OP_BC;
       break;
     case '(':
-      type = TOKEN_OPEN_PARENTHESIS;
+      type = TOK_OP_PA;
       break;
     default:
-      type = TOKEN_ERROR;
+      type = TOK_ERR;
       break;
   }
   return token_new(type, 0);

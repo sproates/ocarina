@@ -4,6 +4,7 @@
 #include "token.h"
 #include "memory.h"
 
+
 int string_tests(void);
 int lexer_tests(void);
 void test_pass(void);
@@ -147,7 +148,7 @@ int lexer_tests(void) {
     tok = lexer_next(lex);
     printf("Got token\n");
     token_print(tok);
-    if(0 == tok || TOKEN_EOF == tok->type) {
+    if(0 == tok || TOK_EOF == tok->type) {
       printf("Deleting token and exiting lexer\n");
       token_delete(tok);
       break;

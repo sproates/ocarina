@@ -2,6 +2,11 @@
 #include "memory.h"
 #include <stdio.h>
 
+/**
+ * Delete a string.
+ *
+ * @param s String to delete.
+ */
 void string_delete(string * s) {
   if(s) {
     mem_free(s->data);
@@ -9,6 +14,13 @@ void string_delete(string * s) {
   }
 }
 
+/**
+ * Create a new string from an (optional) character array.
+ *
+ * @param c (optional) character array to form the initial string.
+ *
+ * @return string on success, 0 on failure.
+ */
 string * string_new(const char * c) {
   string * s;
   if(0 == (s = mem_alloc(sizeof(s)))) {
@@ -23,6 +35,14 @@ string * string_new(const char * c) {
   return string_append_char(s, c);
 }
 
+/**
+ * Append a char to a string.
+ *
+ * @param s The string.
+ * @param c The char.
+ *
+ * @return The modified string on success, 0 on failure.
+ */
 string * string_append(string * s, char c) {
   if(s->length > s->buffer_size - 2) {
     s->buffer_size += 1024;
@@ -35,6 +55,14 @@ string * string_append(string * s, char c) {
   return s;
 }
 
+/**
+ * Append a char array to a string.
+ *
+ * @param s The string.
+ * @param c The char array.
+ *
+ * @return The modified string on success, 0 on failure.
+ */
 string * string_append_char(string * s, const char * c) {
   int i;
   if(c) {
@@ -47,10 +75,26 @@ string * string_append_char(string * s, const char * c) {
   return s;
 }
 
+/**
+ * Append on string to another.
+ *
+ * @param s1 The string to be append to.
+ * @param s2 The string to be appended from.
+ *
+ * @return The modified string on success, 0 on failure.
+ */
 string * string_append_string(string * s1, string * s2) {
   return string_append_char(s1, s2->data);
 }
 
+/**
+ * Compare two strings for equality in terms of their data.
+ *
+ * @param s1 A string to compare.
+ * @param s2 A string to compare.
+ *
+ * @return 1 if the strings match, 0 if they don't.
+ */
 int string_equals(string * s1, string * s2) {
   if(s1->length != s2->length) {
     return 0;
@@ -58,6 +102,14 @@ int string_equals(string * s1, string * s2) {
   return string_equals_char(s1, s2->data);
 }
 
+/**
+ * Compare a string with a char array for equality in terms of their data.
+ *
+ * @param s The string.
+ * @param c The char array.
+ *
+ * @return 1 if they are equal, 0 if they are not.
+ */
 int string_equals_char(string * s, const char * c) {
   int i, same = 1;
   for(i = 0; i < s->length; i++) {
