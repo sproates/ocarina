@@ -12,24 +12,21 @@ typedef enum  {
   LEX_IN_ID,
   LEX_IN_INT,
   LEX_IN_STR
-} lexer_state;
+} lex_state;
 
 typedef struct {
-  lexer_state state;
-  FILE * script_file;
-  int position;
+  lex_state state;
+  FILE * script;
+  int pos;
   char * buffer;
-  int buffer_size;
-  string * token_buffer;
+  int buf_size;
+  string * tok_buf;
   char current_char;
-  int max_buffer_size;
+  int max_buf;
 } lexer;
 
-lexer * lexer_new(FILE * script_file);
-void lexer_delete(lexer * lex);
-void lexer_print(lexer * lex);
-token * lexer_next(lexer * lex);
-lexer * lexer_set_state(lexer * lex, lexer_state state);
-lexer * lexer_set_current_char(lexer * lex, const char c);
+lexer * lex_new(FILE * script);
+void lex_del(lexer * lex);
+token * lex_next(lexer * lex);
 
 #endif

@@ -16,15 +16,15 @@ typedef enum {
   TOK_OP_BK,
   TOK_OP_PA,
   TOK_STR
-} token_type;
+} tok_type;
 
 typedef struct {
-  token_type type;
+  tok_type type;
   string * data;
 } token;
 
-token * token_new(token_type type, string * data);
-void token_print(token * tok);
-void token_delete(token * tok);
+token * tok_new(tok_type type, string * data);
+void tok_print(token * tok);
+void tok_delete(token * tok);
 
 #endif

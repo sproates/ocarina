@@ -2,7 +2,7 @@
 #include "memory.h"
 #include <stdio.h>
 
-token * token_new(token_type type, string * data) {
+token * tok_new(tok_type type, string * data) {
   token * tok;
 
   if(0 == (tok = mem_alloc(sizeof(* tok)))) {
@@ -13,15 +13,15 @@ token * token_new(token_type type, string * data) {
   return tok;
 }
 
-void token_delete(token * tok) {
-  printf("token_delete()\n");
+void tok_delete(token * tok) {
+  printf("tok_delete()\n");
   if(0 != tok) {
-    string_delete(tok->data);
+    str_del(tok->data);
     mem_free(tok);
   }
 }
 
-void token_print(token * tok) {
+void tok_print(token * tok) {
   printf("Token {\n\tType: ");
   switch(tok->type) {
     case TOK_CL_BC:
