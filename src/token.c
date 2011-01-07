@@ -2,6 +2,16 @@
 #include "memory.h"
 #include <stdio.h>
 
+/* public function definitions */
+
+/**
+ * Constructs a new token.
+ *
+ * @param type The type of token to create.
+ * @param data The data associated with the token.
+ *
+ * @return The token on success, 0 on failure.
+ */
 token * tok_new(tok_type type, string * data) {
   token * tok;
 

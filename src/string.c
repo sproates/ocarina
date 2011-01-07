@@ -2,6 +2,8 @@
 #include "memory.h"
 #include <stdio.h>
 
+/* public function definitions */
+
 /**
  * Delete a string.
  *
