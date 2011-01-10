@@ -1,0 +1,2 @@
+Encapsulate script source rather than letting lexer have direct file access.
+Begin parser preparatory work.
