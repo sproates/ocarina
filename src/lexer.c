@@ -13,7 +13,10 @@ int _is_id_start(char c);
 int _is_alpha(char c);
 int _is_ctrl_char(char c);
 int _is_keyword(string * s);
+int _is_escapable(char c);
+int _is_escape(char c);
 char _lexer_next_char(lexer * lex);
+char _make_escape(char c);
 token * _token_ctrl_char(char c);
 token * _tok_new(lexer * lex, tok_type type, lex_state state);
 lexer * _lex_adv(lexer * lex);
@@ -108,12 +111,24 @@ token * lex_next(lexer * lex) {
       return _tok_new(lex, TOK_ID, LEX_DEF);
     case LEX_IN_STR:
       if(!_is_str_end(lex->current_char)) {
+        if(_is_escape(lex->current_char)) {
+          return lex_next(_lex_adv(_lex_set_state(lex, LEX_IN_ESC)));
+        }
         if(0 == str_add(lex->tok_buf, lex->current_char)) {
           return lex_next(_lex_set_state(lex, LEX_ERR));
         }
         return lex_next(_lex_adv(lex));
       }
-      return _tok_new(lex, TOK_STR, LEX_ERR);
+      return _tok_new(lex, TOK_STR, LEX_DEF);
+    case LEX_IN_ESC:
+      if(_is_escapable(lex->current_char)) {
+        _lex_set_char(lex, _make_escape(lex->current_char));
+        if(0 == str_add(lex->tok_buf, lex->current_char)) {
+          return lex_next(_lex_set_state(lex, LEX_ERR));
+        }
+        return lex_next(_lex_adv(_lex_set_state(lex, LEX_IN_STR)));
+      }
+      return lex_next(_lex_set_state(lex, LEX_ERR));
     case LEX_ERR:
       return _tok_new(lex, TOK_ERR, LEX_DEF);
     case LEX_DONE:
@@ -239,6 +254,57 @@ int _is_keyword(string * s) {
     str_eq_char(s, "if") ||
     str_eq_char(s, "for")
   );
+}
+
+/**
+ * Determine whether a character is escapable.
+ *
+ * @param c The character.
+ *
+ * @return Non-zero if the character is escapable, 0 if it isn't.
+ */
+int _is_escapable(char c) {
+  return (
+    'n' == c ||
+    'r' == c ||
+    't' == c ||
+    '"' == c ||
+    '\\' == c
+  );
+}
+
+/**
+ * Make an escaped character from a char.
+ *
+ * @param c The char.
+ *
+ * @return An escaped character.
+ */
+char _make_escape(char c) {
+  switch(c) {
+    case 'n':
+      return '\n';
+    case 'r':
+      return '\r';
+    case 't':
+      return '\t';
+    case '"':
+    case '\\':
+    default:
+      return c;
+      return c;
+  }
+}
+
+/**
+ * Determine whether a character is an escape character.
+ *
+ * @param c The character.
+ *
+ * @return Non-zero if the character is an escape character, 0 if it isn't.
+ */
+int _is_escape(char c) {
+  return ('\\' == c);
 }
 
 /**

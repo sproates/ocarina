@@ -122,6 +122,7 @@ int string_tests(void) {
     test_fail();
   }
   test_pass();
+  str_del(s);
 
   printf("Completed string tests\n");
   return 0;

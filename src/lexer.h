@@ -9,6 +9,7 @@ typedef enum  {
   LEX_DONE,
   LEX_DEF,
   LEX_ERR,
+  LEX_IN_ESC,
   LEX_IN_ID,
   LEX_IN_INT,
   LEX_IN_STR
