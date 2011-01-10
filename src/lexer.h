@@ -5,6 +5,8 @@
 #include "token.h"
 #include <stdio.h>
 
+/* public structure definitions */
+
 typedef enum  {
   LEX_DONE,
   LEX_DEF,
@@ -25,6 +27,8 @@ typedef struct {
   char current_char;
   int max_buf;
 } lexer;
+
+/* public function prototypes */
 
 lexer * lex_new(FILE * script);
 void lex_del(lexer * lex);

@@ -6,7 +6,7 @@ CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -Wpointer-arith \
 -std=iso9899:1990 -ansi -I${INCLUDES}
 EXE = ocarina.exe
 TEST_EXE = run_tests.exe
-LIB_OBJS = string.o token.o lexer.o memory.o
+LIB_OBJS = string.o token.o lexer.o memory.o script.o
 
 all: ${EXE} ${TEST_EXE}
 
@@ -24,12 +24,12 @@ clean:
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-tests.o: lexer.h string.h token.h memory.h
+tests.o: lexer.h string.h token.h memory.h script.h
 
-main.o: lexer.h token.h
-
-lexer.o: lexer.h string.h token.h memory.h
+lexer.o: lexer.h string.h token.h memory.h script.h
 
 string.o: string.h memory.h
 
 token.o: token.h string.h memory.h
+
+script.o: memory.h string.h
