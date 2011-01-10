@@ -23,6 +23,11 @@ token * tok_new(tok_type type, string * data) {
   return tok;
 }
 
+/**
+ * Delete a token.
+ *
+ * @param tok The token to delete.
+ */
 void tok_delete(token * tok) {
   printf("tok_delete()\n");
   if(0 != tok) {
@@ -31,6 +36,11 @@ void tok_delete(token * tok) {
   }
 }
 
+/**
+ * Print a representation of a token to standard output.
+ *
+ * @param tok The token.
+ */
 void tok_print(token * tok) {
   printf("Token {\n\tType: ");
   switch(tok->type) {
