@@ -6,7 +6,8 @@
 
 script_impl * _scr_impl_new(void);
 void _scr_impl_del(script_impl * impl);
-void _str_scr_del(script * s);
+void _scr_del_file(file_script * scr);
+file_script * _scr_new_file(const char * source);
 
 /* public function definitions */
 
@@ -17,7 +18,7 @@ void _str_scr_del(script * s);
  *
  * @return A pointer to a script on success, zero on failure.
  */
-script * scr_new(script_type type, char * source) {
+script * scr_new(script_type type, const char * source) {
   script * scr;
   if(0 == (scr = mem_alloc(sizeof(script))) ||
      0 == (scr->impl = _scr_impl_new())) {
@@ -26,14 +27,7 @@ script * scr_new(script_type type, char * source) {
   scr->type = type;
   switch(type) {
     case SCR_FILE:
-      scr->impl->f->filename = source;
-      if(0 == (scr->impl->f->f = fopen(source, "r"))) {
-        goto error;
-      }
-      scr->impl->f->pos = 0;
-      scr->impl->f->max_buf = 1024;
-      scr->impl->f->buf_size = 0;
-      if(0 == (scr->impl->f->buf = mem_alloc(scr->impl->f->max_buf * (sizeof(char))))) {
+      if(0 == (scr->impl->f = _scr_new_file(source))) {
         goto error;
       }
       break;
@@ -53,6 +47,27 @@ error:
   return 0;
 }
 
+file_script * _scr_new_file(const char * source) {
+  file_script * scr;
+  if(0 == (scr = mem_alloc(sizeof(file_script)))) {
+    goto error;
+  }
+  scr->filename = source;
+  if(0 == (scr->f = fopen(scr->filename, "r"))) {
+    goto error;
+  }
+  scr->pos = 0;
+  scr->max_buf = 1024;
+  scr->buf_size = 0;
+  if(0 == (scr->buf = mem_alloc(scr->max_buf * (sizeof(char))))) {
+    goto error;
+  }
+  return scr;
+error:
+  _scr_del_file(scr);
+  return 0;
+}
+
 /**
  * Destructs a script.
  *
@@ -60,7 +75,13 @@ error:
  */
 void scr_del(script * scr) {
   if(0 != scr) {
-    _scr_impl_del(scr->impl);
+    switch(scr->type) {
+      case SCR_FILE:
+        _scr_del_file(scr->impl->f);
+        break;
+      default:
+        break;
+    }
     mem_free(scr);
   }
 }
@@ -116,5 +137,15 @@ script_impl * _scr_impl_new(void) {
 void _scr_impl_del(script_impl * impl)  {
   if(0 != impl) {
     mem_free(impl);
+  }
+}
+
+void _scr_del_file(file_script * scr) {
+  if(scr) {
+    if(scr->f) {
+      fclose(scr->f);
+    }
+    mem_free(scr->buf);
+    mem_free(scr);
   }
 }

@@ -7,12 +7,12 @@
 /* public structure definitions */
 
 typedef struct {
-  char * filename;
+  const char * filename;
   FILE * f;
   char * buf;
-  int buf_size;
-  int max_buf;
-  int pos;
+  unsigned int buf_size;
+  unsigned int max_buf;
+  unsigned int pos;
 } file_script;
 
 typedef struct {
@@ -37,7 +37,7 @@ typedef struct {
 
 /* public function prototypes */
 
-script * scr_new(script_type type, char * source);
+script * scr_new(script_type type, const char * source);
 void scr_del(script * scr);
 char scr_next_char(script * scr);
 
