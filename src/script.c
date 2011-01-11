@@ -101,7 +101,6 @@ void _scr_del_file(file_script * scr) {
     if(scr->f) {
       fclose(scr->f);
     }
-    mem_free(scr->buf);
   }
 }
 
@@ -113,7 +112,6 @@ void _scr_del_file(file_script * scr) {
 void _scr_del_str(string_script * scr) {
   if(scr) {
     str_del(scr->s);
-    mem_free(scr);
   }
 }
 
