@@ -198,41 +198,37 @@ int string_tests(void) {
 }
 
 int lexer_tests(void) {
-  FILE * script_file;
+  script * scr;
   lexer * lex;
   token * tok;
 
   printf("Running lexer tests...\n");
 
-  if(0 == (script_file = fopen("test.oca", "r"))) {
-    printf("Could not open source file for reading.\n");
+  if(0 == (scr = scr_new(SCR_FILE, "test.oca"))) {
+    printf("Could not create script\n");
     return 1;
   }
-  printf("Opened script file\n");
-  if(0 == (lex = lex_new(script_file))) {
-    printf("Unable to start lexing\n");
+  printf("Created script.\n");
+  if(0 == (lex = lex_new(scr))) {
+    printf("Unable to create lexer.\n");
     return 1;
   }
-  printf("Created lexer\n");
+  printf("Created lexer.\n");
   while(1) {
     tok = lex_next(lex);
-    printf("Got token\n");
-    tok_print(tok);
+    printf("Got a token.\n");
     if(0 == tok || TOK_EOF == tok->type) {
-      printf("Deleting token and exiting lexer\n");
+      printf("Deleting token and exiting lexer.\n");
       tok_delete(tok);
       break;
     }
-    printf("Deleting token\n");
+    printf("Deleting token.\n");
     tok_delete(tok);
+    printf("Token deleted.\n");
     printf("Lexing...\n");
   }
-  printf("Finished lexing\n");
-  if(EOF == fclose(script_file)) {
-    printf("Failed to close file handle on source file.\n");
-    return 1;
-  }
-  printf("Closed source file\n");
+  printf("Finished lexing.\n");
+  scr_del(scr);
   lex_del(lex);
 
   printf("Completed lexer tests\n");

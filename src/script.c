@@ -4,14 +4,14 @@
 
 /* private function prototypes */
 
-script_impl * _scr_impl_new(void);
-void _scr_impl_del(script_impl * impl);
-void _scr_del_file(file_script * scr);
-void _scr_del_str(string_script * scr);
 file_script * _scr_new_file(const char * source);
 string_script * _scr_new_str(const char * source);
+
 char _scr_file_next(file_script * scr);
 char _scr_str_next(string_script * scr);
+
+void _scr_del_file(file_script * scr);
+void _scr_del_str(string_script * scr);
 
 /* public function definitions */
 
@@ -28,6 +28,9 @@ script * scr_new(script_type type, const char * source) {
     goto error;
   }
   scr->type = type;
+  if(0 == (scr->impl = mem_alloc(sizeof(scr->impl)))) {
+    goto error;
+  }
   switch(type) {
     case SCR_FILE:
       if(0 == (scr->impl->f = _scr_new_file(source))) {
@@ -57,9 +60,13 @@ void scr_del(script * scr) {
       case SCR_FILE:
         _scr_del_file(scr->impl->f);
         break;
-      default:
+      case SCR_STR:
+        _scr_del_str(scr->impl->s);
         break;
+      default:
+        return;
     }
+    mem_free(scr->impl);
     mem_free(scr);
   }
 }
@@ -85,30 +92,6 @@ char scr_next(script * scr) {
 /* private function definitions */
 
 /**
- * Create a new script_impl instance.
- *
- * @return A pointer to a script_impl on success, zero on failure.
- */
-script_impl * _scr_impl_new(void) {
-  script_impl * impl;
-  if(0 == (impl = mem_alloc(sizeof(script_impl)))) {
-    return 0;
-  }
-  return impl;
-}
-
-/**
- * Destructs a script_impl.
- *
- * @param scr The script_impl to delete.
- */
-void _scr_impl_del(script_impl * impl)  {
-  if(0 != impl) {
-    mem_free(impl);
-  }
-}
-
-/**
  * Destructs a file_script.
  *
  * @param scr The file_script to delete.
@@ -119,7 +102,6 @@ void _scr_del_file(file_script * scr) {
       fclose(scr->f);
     }
     mem_free(scr->buf);
-    mem_free(scr);
   }
 }
 
@@ -144,7 +126,7 @@ void _scr_del_str(string_script * scr) {
  */
 string_script * _scr_new_str(const char * source) {
   string_script * scr;
-  if(0 == (scr = mem_alloc(sizeof(string_script)))) {
+  if(0 == (scr = mem_alloc(sizeof(script_impl)))) {
     goto error;
   }
   if(0 == (scr->s = str_new(source))) {
@@ -166,7 +148,7 @@ string_script * _scr_new_str(const char * source) {
  */
 file_script * _scr_new_file(const char * source) {
   file_script * scr;
-  if(0 == (scr = mem_alloc(sizeof(file_script)))) {
+  if(0 == (scr = mem_alloc(sizeof(script_impl)))) {
     goto error;
   }
   scr->filename = source;

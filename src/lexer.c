@@ -32,20 +32,14 @@ lexer * _lex_set_char(lexer * lex, const char c);
  *
  * @return A pointer to a lexer on success, zero on failure.
  */
-lexer * lex_new(FILE * script) {
+lexer * lex_new(script * s) {
   lexer * lex;
 
   if(0 == (lex = mem_alloc(sizeof(* lex)))) {
     return 0;
   }
   lex->state = LEX_DEF;
-  lex->script = script;
-  lex->pos = 0;
-  lex->max_buf = 1024;
-  if(0 == (lex->buffer = mem_alloc(lex->max_buf * (sizeof(char))))) {
-    return 0;
-  }
-  lex->buf_size = 0;
+  lex->s = s;
   lex->tok_buf = str_new(0);
   return lex;
 }
@@ -57,8 +51,8 @@ lexer * lex_new(FILE * script) {
  */
 void lex_del(lexer * lex) {
   if(0 != lex) {
+    scr_del(lex->s);
     str_del(lex->tok_buf);
-    mem_free(lex->buffer);
     mem_free(lex);
   }
 }
@@ -361,13 +355,7 @@ lexer * _lex_adv(lexer * lex) {
  * @return char The next character from the lexer (EOF on end of file).
  */
 char _lex_next_char(lexer * lex) {
-  if(0 == lex->buf_size || lex->pos >= lex->buf_size) {
-    lex->buf_size = fread(lex->buffer, sizeof(char), lex->max_buf, lex->script);
-    if(0 == lex->buf_size) {
-      return EOF;
-    }
-  }
-  return lex->buffer[lex->pos++];
+  return scr_next(lex->s);
 }
 
 /**

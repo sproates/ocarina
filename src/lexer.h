@@ -3,6 +3,7 @@
 
 #include "string.h"
 #include "token.h"
+#include "script.h"
 #include <stdio.h>
 
 /* public structure definitions */
@@ -20,17 +21,14 @@ typedef enum  {
 typedef struct {
   lex_state state;
   FILE * script;
-  unsigned int pos;
-  char * buffer;
-  unsigned int buf_size;
   string * tok_buf;
   char current_char;
-  unsigned int max_buf;
+  script * s;
 } lexer;
 
 /* public function prototypes */
 
-lexer * lex_new(FILE * script);
+lexer * lex_new(script * s);
 void lex_del(lexer * lex);
 token * lex_next(lexer * lex);
 
