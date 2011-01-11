@@ -11,7 +11,5 @@ void * mem_realloc(void * p, size_t size) {
 }
 
 void mem_free(void * p) {
-  if(p) {
-    free(p);
-  }
+  if(p) { free(p); }
 }

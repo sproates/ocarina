@@ -37,7 +37,7 @@ typedef struct {
 
 /* public function prototypes */
 
-script * scr_new(script_type type, const char * source);
+script * scr_new(const script_type type, const char * source);
 void scr_del(script * scr);
 char scr_next(script * scr);
 

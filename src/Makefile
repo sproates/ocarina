@@ -4,11 +4,12 @@ INCLUDES = .
 CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -Wpointer-arith \
 -Wmissing-prototypes -Wredundant-decls -Winline -pedantic-errors \
 -std=iso9899:1990 -ansi -I${INCLUDES}
-EXE = ocarina.exe
-TEST_EXE = run_tests.exe
+EXE = ./ocarina.exe
+TEST_EXE = ./run_tests.exe
 LIB_OBJS = string.o token.o lexer.o memory.o script.o
 
 all: ${EXE} ${TEST_EXE}
+	${TEST_EXE}
 
 ${EXE}: main.o ${LIB_OBJS}
 	$(CC) -o $@ main.o ${LIB_OBJS}
