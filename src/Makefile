@@ -1,3 +1,5 @@
+.PHONY: all clean loc rebuild
+
 CC = gcc
 RM = rm -f
 INCLUDES = .
@@ -10,6 +12,8 @@ LIB_OBJS = string.o token.o lexer.o memory.o script.o
 
 all: ${EXE} ${TEST_EXE}
 	${TEST_EXE}
+
+rebuild: clean all
 
 ${EXE}: main.o ${LIB_OBJS}
 	$(CC) -o $@ main.o ${LIB_OBJS}
@@ -34,3 +38,6 @@ string.o: string.h memory.h
 token.o: token.h string.h memory.h
 
 script.o: memory.h string.h
+
+loc:
+	find . -name "*.c" -o -name "*.h" | xargs wc -l
