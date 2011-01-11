@@ -101,6 +101,7 @@ void _scr_del_file(file_script * scr) {
     if(scr->f) {
       fclose(scr->f);
     }
+    mem_free(scr);
   }
 }
 
@@ -112,6 +113,7 @@ void _scr_del_file(file_script * scr) {
 void _scr_del_str(string_script * scr) {
   if(scr) {
     str_del(scr->s);
+    mem_free(scr);
   }
 }
 
@@ -124,7 +126,7 @@ void _scr_del_str(string_script * scr) {
  */
 string_script * _scr_new_str(const char * source) {
   string_script * scr;
-  if(0 == (scr = mem_alloc(sizeof(script_impl)))) {
+  if(0 == (scr = mem_alloc(sizeof(file_script)))) {
     goto error;
   }
   if(0 == (scr->s = str_new(source))) {
@@ -132,9 +134,9 @@ string_script * _scr_new_str(const char * source) {
   }
   scr->pos = 0;
   return scr;
-  error:
-    _scr_del_str(scr);
-    return 0;
+error:
+  _scr_del_str(scr);
+  return 0;
 }
 
 /**
@@ -146,7 +148,7 @@ string_script * _scr_new_str(const char * source) {
  */
 file_script * _scr_new_file(const char * source) {
   file_script * scr;
-  if(0 == (scr = mem_alloc(sizeof(script_impl)))) {
+  if(0 == (scr = mem_alloc(sizeof(file_script)))) {
     goto error;
   }
   scr->filename = source;

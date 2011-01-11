@@ -209,7 +209,6 @@ int lexer_tests(void) {
     return 1;
   }
   printf("Created script.\n");
-  scr_del(scr);
   if(0 == (lex = lex_new_file("test.oca"))) {
     printf("Unable to create lexer.\n");
     return 1;
@@ -220,7 +219,6 @@ int lexer_tests(void) {
     printf("Got a token.\n");
     if(0 == tok || TOK_EOF == tok->type) {
       printf("Deleting token and exiting lexer.\n");
-      tok_delete(tok);
       break;
     }
     printf("Deleting token.\n");
