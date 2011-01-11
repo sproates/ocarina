@@ -209,7 +209,8 @@ int lexer_tests(void) {
     return 1;
   }
   printf("Created script.\n");
-  if(0 == (lex = lex_new(scr))) {
+  scr_del(scr);
+  if(0 == (lex = lex_new_file("test.oca"))) {
     printf("Unable to create lexer.\n");
     return 1;
   }
@@ -228,7 +229,6 @@ int lexer_tests(void) {
     printf("Lexing...\n");
   }
   printf("Finished lexing.\n");
-  scr_del(scr);
   lex_del(lex);
 
   printf("Completed lexer tests\n");

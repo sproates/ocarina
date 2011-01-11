@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include "memory.h"
 #include "token.h"
+#include "script.h"
 #include <stdio.h>
 
 /* private function prototypes */
@@ -42,6 +43,21 @@ lexer * lex_new(script * s) {
   lex->s = s;
   lex->tok_buf = str_new(0);
   return lex;
+}
+
+/**
+ * Create a new lexer instance from a filename.
+ *
+ * @param script Handle to an open source file.
+ *
+ * @return A pointer to a lexer on success, zero on failure.
+ */
+lexer * lex_new_file(const char * filename) {
+  script * s;
+  if(0 == (s = scr_new(SCR_FILE, filename))) {
+    return 0;
+  }
+  return lex_new(s);
 }
 
 /**

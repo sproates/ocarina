@@ -29,6 +29,8 @@ typedef struct {
 /* public function prototypes */
 
 lexer * lex_new(script * s);
+lexer * lex_new_file(const char * filename);
+
 void lex_del(lexer * lex);
 token * lex_next(lexer * lex);
 
