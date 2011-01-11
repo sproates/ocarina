@@ -253,9 +253,9 @@ int script_tests(void) {
   }
   test_pass();
 
-  printf("scr_next_char()\n");
-  if('1' != (c = scr_next_char(s))) {
-    printf("scr_next_char() returned the wrong char\n");
+  printf("scr_nextr()\n");
+  if('1' != (c = scr_next(s))) {
+    printf("scr_next() returned the wrong char\n");
     test_fail();
   }
   test_pass();
@@ -269,24 +269,24 @@ int script_tests(void) {
   }
   test_pass();
 
-  printf("scr_next_char()\n");
-  if('a' != (c = scr_next_char(s))) {
-    printf("scr_next_char() returned the wrong char\n");
+  printf("scr_next()\n");
+  if('a' != (c = scr_next(s))) {
+    printf("scr_next() returned the wrong char\n");
     test_fail();
   }
   test_pass();
-  if('b' != (c = scr_next_char(s))) {
-    printf("scr_next_char() returned the wrong char\n");
+  if('b' != (c = scr_next(s))) {
+    printf("scr_next() returned the wrong char\n");
     test_fail();
   }
   test_pass();
-  if('c' != (c = scr_next_char(s))) {
-    printf("scr_next_char() returned the wrong char\n");
+  if('c' != (c = scr_next(s))) {
+    printf("scr_next() returned the wrong char\n");
     test_fail();
   }
   test_pass();
-  if(EOF != (c = scr_next_char(s))) {
-    printf("scr_next_char() returned the wrong char\n");
+  if(EOF != (c = scr_next(s))) {
+    printf("scr_next() returned the wrong char\n");
     test_fail();
   }
   test_pass();

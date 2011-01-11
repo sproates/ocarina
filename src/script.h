@@ -39,6 +39,6 @@ typedef struct {
 
 script * scr_new(script_type type, const char * source);
 void scr_del(script * scr);
-char scr_next_char(script * scr);
+char scr_next(script * scr);
 
 #endif
