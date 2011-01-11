@@ -12,6 +12,7 @@ typedef struct {
   char * buf;
   int buf_size;
   int max_buf;
+  int pos;
 } file_script;
 
 typedef struct {
@@ -37,5 +38,6 @@ typedef struct {
 
 script * scr_new(script_type type, char * source);
 void scr_del(script * scr);
+char scr_next_char(script * scr);
 
 #endif

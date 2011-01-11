@@ -3,10 +3,12 @@
 #include "lexer.h"
 #include "token.h"
 #include "memory.h"
+#include "script.h"
 
 
 int string_tests(void);
 int lexer_tests(void);
+int script_tests(void);
 void test_pass(void);
 void test_fail(void);
 int test_count(void);
@@ -42,6 +44,7 @@ int pass_count(void) {
 int main(void) {
   string_tests();
   lexer_tests();
+  script_tests();
   printf("\n\n----------------------------------\n\n");
   printf("Tests: %d\n", test_count());
   printf("Passed: %d\n", pass_count());
@@ -202,5 +205,20 @@ int lexer_tests(void) {
   lex_del(lex);
 
   printf("Completed lexer tests\n");
+  return 0;
+}
+
+int script_tests(void) {
+  script * s;
+
+  printf("Running script tests...\n");
+
+  if(0 == (s = scr_new(SCR_FILE, "test.oca"))) {
+    printf("Failed to create a new script\n");
+    test_fail();
+    return 1;
+  }
+  test_pass();
+  printf("Created script ok\n");
   return 0;
 }
