@@ -245,7 +245,7 @@ int script_tests(void) {
 
   printf("Running script tests...\n");
 
-  printf("scr_new()\n");
+  printf("scr_new() (file type)\n");
   if(0 == (s = scr_new(SCR_FILE, "test.oca"))) {
     printf("Failed to create a new script\n");
     test_fail();
@@ -259,7 +259,39 @@ int script_tests(void) {
     test_fail();
   }
   test_pass();
-
   scr_del(s);
+
+  printf("scr_new() (string type)\n");
+  if(0 == (s = scr_new(SCR_STR, "abc"))) {
+    printf("Failed to create a new script\n");
+    test_fail();
+    return 1;
+  }
+  test_pass();
+
+  printf("scr_next_char()\n");
+  if('a' != (c = scr_next_char(s))) {
+    printf("scr_next_char() returned the wrong char\n");
+    test_fail();
+  }
+  test_pass();
+  if('b' != (c = scr_next_char(s))) {
+    printf("scr_next_char() returned the wrong char\n");
+    test_fail();
+  }
+  test_pass();
+  if('c' != (c = scr_next_char(s))) {
+    printf("scr_next_char() returned the wrong char\n");
+    test_fail();
+  }
+  test_pass();
+  if(EOF != (c = scr_next_char(s))) {
+    printf("scr_next_char() returned the wrong char\n");
+    test_fail();
+  }
+  test_pass();
+  
+  scr_del(s);
+
   return 0;
 }

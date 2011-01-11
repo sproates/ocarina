@@ -66,7 +66,7 @@ string * str_add(string * s, char c) {
  * @return The modified string on success, 0 on failure.
  */
 string * str_add_char(string * s, const char * c) {
-  int i;
+  unsigned int i;
   if(c) {
     for(i = 0; c[i]; i++) {
       if(0 == str_add(s, c[i])) {

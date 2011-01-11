@@ -73,6 +73,7 @@ void scr_del(script * scr) {
  * @return The next character.
  */
 char scr_next_char(script * scr) {
+  char c;
   switch(scr->type) {
     case SCR_FILE:
       if(0 == scr->impl->f->buf_size || scr->impl->f->pos >= scr->impl->f->buf_size) {
@@ -82,8 +83,11 @@ char scr_next_char(script * scr) {
         }
       }
       return scr->impl->f->buf[scr->impl->f->pos++];
-      break;
     case SCR_STR:
+      if(0 == (c = str_at(scr->impl->s->s, scr->impl->s->pos++))) {
+        return EOF;
+      }
+      return c;
     default:
       return 0;
   }
