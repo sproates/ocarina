@@ -20,12 +20,12 @@ typedef enum  {
 typedef struct {
   lex_state state;
   FILE * script;
-  int pos;
+  unsigned int pos;
   char * buffer;
-  int buf_size;
+  unsigned int buf_size;
   string * tok_buf;
   char current_char;
-  int max_buf;
+  unsigned int max_buf;
 } lexer;
 
 /* public function prototypes */

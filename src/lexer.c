@@ -15,7 +15,7 @@ int _is_ctrl_char(char c);
 int _is_keyword(string * s);
 int _is_escapable(char c);
 int _is_escape(char c);
-char _lexer_next_char(lexer * lex);
+char _lex_next_char(lexer * lex);
 char _make_escape(char c);
 token * _token_ctrl_char(char c);
 token * _tok_new(lexer * lex, tok_type type, lex_state state);
@@ -350,7 +350,7 @@ token * _token_ctrl_char(char c) {
  * @return The modified lexer.
  */
 lexer * _lex_adv(lexer * lex) {
-  return _lex_set_char(lex, _lexer_next_char(lex));
+  return _lex_set_char(lex, _lex_next_char(lex));
 }
 
 /**
@@ -360,7 +360,7 @@ lexer * _lex_adv(lexer * lex) {
  *
  * @return char The next character from the lexer (EOF on end of file).
  */
-char _lexer_next_char(lexer * lex) {
+char _lex_next_char(lexer * lex) {
   if(0 == lex->buf_size || lex->pos >= lex->buf_size) {
     lex->buf_size = fread(lex->buffer, sizeof(char), lex->max_buf, lex->script);
     if(0 == lex->buf_size) {

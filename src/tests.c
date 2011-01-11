@@ -54,6 +54,7 @@ int main(void) {
 
 int string_tests(void) {
   string * s;
+  char c;
 
   printf("Running string tests...\n");
 
@@ -162,6 +163,36 @@ int string_tests(void) {
   test_pass();
   str_del(s);
 
+  s = str_new("abc");
+
+  printf("str_at()\n");
+  if('a' != (c = str_at(s, 0))) {
+    printf("Wrong char came back from str_at()\n");
+    test_fail();
+  }
+  test_pass();
+  if('b' != (c = str_at(s, 1))) {
+    printf("Wrong char came back from str_at(): %c\n", c);
+    test_fail();
+  }
+  test_pass();
+  if('c' != (c = str_at(s, 2))) {
+    printf("Wrong char came back from str_at(): %c\n", c);
+    test_fail();
+  }
+  test_pass();
+  if(0 != (c = str_at(s, 3))) {
+    printf("Wrong char came back from str_at()%c\n", c);
+    test_fail();
+  }
+  test_pass();
+  if(0 != (c = str_at(s, 1050))) {
+    printf("Wrong char came back from str_at()%c\n", c);
+    test_fail();
+  }
+  test_pass();
+  str_del(s);
+
   printf("Completed string tests\n");
   return 0;
 }
@@ -210,15 +241,25 @@ int lexer_tests(void) {
 
 int script_tests(void) {
   script * s;
+  char c;
 
   printf("Running script tests...\n");
 
+  printf("scr_new()\n");
   if(0 == (s = scr_new(SCR_FILE, "test.oca"))) {
     printf("Failed to create a new script\n");
     test_fail();
     return 1;
   }
   test_pass();
-  printf("Created script ok\n");
+
+  printf("scr_next_char()\n");
+  if('1' != (c = scr_next_char(s))) {
+    printf("scr_next_char() returned the wrong char\n");
+    test_fail();
+  }
+  test_pass();
+
+  scr_del(s);
   return 0;
 }

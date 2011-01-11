@@ -113,7 +113,7 @@ int str_eq(string * s1, string * s2) {
  * @return 1 if they are equal, 0 if they are not.
  */
 int str_eq_char(string * s, const char * c) {
-  int i, same = 1;
+  unsigned int i, same = 1;
   for(i = 0; i < s->length; i++) {
     if(s->data[i] != c[i]) {
       same = 0;
@@ -124,4 +124,19 @@ int str_eq_char(string * s, const char * c) {
     }
   }
   return same;
+}
+
+/**
+ * Get the char at a specific position in a string.
+ *
+ * @param s The string.
+ * @param i The position;
+ *
+ * return A char if the position is valid, 0 otherwise.
+ */
+char str_at(string * s, const unsigned int i) {
+  if(i >= (s->length)) {
+    return 0;
+  }
+  return s->data[i];
 }

@@ -17,6 +17,7 @@ typedef struct {
 
 typedef struct {
   string * s;
+  int pos;
 } string_script;
 
 typedef enum {

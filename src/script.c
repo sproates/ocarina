@@ -33,12 +33,16 @@ script * scr_new(script_type type, char * source) {
       scr->impl->f->pos = 0;
       scr->impl->f->max_buf = 1024;
       scr->impl->f->buf_size = 0;
+      if(0 == (scr->impl->f->buf = mem_alloc(scr->impl->f->max_buf * (sizeof(char))))) {
+        goto error;
+      }
       break;
     case SCR_STR:
       scr->impl->s->s = str_new(source);
       if(0 == scr->impl->s->s) {
         goto error;
       }
+      scr->impl->s->pos = 0;
       break;
     default:
       goto error;
@@ -61,6 +65,13 @@ void scr_del(script * scr) {
   }
 }
 
+/**
+ * Get the next character from a script.
+ *
+ * @param scr The script.
+ *
+ * @return The next character.
+ */
 char scr_next_char(script * scr) {
   switch(scr->type) {
     case SCR_FILE:
@@ -69,7 +80,7 @@ char scr_next_char(script * scr) {
         if(0 == scr->impl->f->buf_size) {
           return EOF;
         }
-      } 
+      }
       return scr->impl->f->buf[scr->impl->f->pos++];
       break;
     case SCR_STR:
