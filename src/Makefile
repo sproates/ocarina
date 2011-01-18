@@ -10,7 +10,7 @@ CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -Wpointer-arith \
 -std=iso9899:1990 -ansi -I${INCLUDES}
 EXE = ./ocarina.exe
 TEST_EXE = ./run_tests.exe
-LIB_OBJS = string.o token.o lexer.o memory.o script.o
+LIB_OBJS = string.o token.o lexer.o memory.o script.o parser.o
 
 all: ${EXE} ${TEST_EXE}
 	${TEST_EXE}
@@ -31,17 +31,17 @@ clean:
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-tests.o: lexer.h string.h token.h memory.h script.h parser.h
+tests.o: tests.c lexer.h string.h token.h memory.h script.h parser.h
 
-lexer.o: lexer.h string.h token.h memory.h script.h
+lexer.o: lexer.c lexer.h string.h token.h memory.h script.h
 
-string.o: string.h memory.h
+string.o: string.c string.h memory.h
 
-token.o: token.h string.h memory.h
+token.o: token.c token.h string.h memory.h
 
-script.o: script.h memory.h string.h
+script.o: script.c script.h memory.h string.h
 
-parser.o: parser.h lexer.h
+parser.o: parser.c parser.h lexer.h
 
 loc:
 	find . -name "*.c" -o -name "*.h" | xargs wc -l
