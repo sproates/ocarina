@@ -21,7 +21,7 @@
  *
  * @param size The amount of memory to allocate.
  *
- * @param A pointer to the allocated memory on success; zero on failure.
+ * @return A pointer to the allocated memory on success; zero on failure.
  */
 void * mem_alloc(size_t size);
 
@@ -38,7 +38,7 @@ void mem_free(void * p);
  * @param p A previously allocated heap memory block.
  * @param size The new size of the block.
  *
- * @param A pointer the reallocated memory on success; zero on failure.
+ * @return A pointer the reallocated memory on success; zero on failure.
  */
 void * mem_realloc(void * p, size_t size);
 

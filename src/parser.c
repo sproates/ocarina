@@ -1,5 +1,9 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
+/**
+ * @file parser.c
+ */
+
 #include "parser.h"
 #include "lexer.h"
 #include "memory.h"
@@ -10,6 +14,7 @@
 
 parser * par_new(lexer * lex) {
   parser * par;
+  if(0 == lex) { return 0; }
   if(0 == (par = mem_alloc(sizeof(* par)))) { return 0; }
   par->state = PAR_DEF;
   par->lex = lex;

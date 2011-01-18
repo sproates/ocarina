@@ -4,6 +4,7 @@
 #define PARSER_H
 
 /**
+ * @file parser.h
  * The functions that implement the Ocarina parser.
  */
 
