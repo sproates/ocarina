@@ -31,7 +31,7 @@ clean:
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-tests.o: lexer.h string.h token.h memory.h script.h
+tests.o: lexer.h string.h token.h memory.h script.h parser.h
 
 lexer.o: lexer.h string.h token.h memory.h script.h
 
@@ -39,7 +39,9 @@ string.o: string.h memory.h
 
 token.o: token.h string.h memory.h
 
-script.o: memory.h string.h
+script.o: script.h memory.h string.h
+
+parser.o: parser.h lexer.h
 
 loc:
 	find . -name "*.c" -o -name "*.h" | xargs wc -l

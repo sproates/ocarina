@@ -231,7 +231,7 @@ static int _is_ctrl_char(char c) {
 }
 
 static int _is_keyword(string * s) {
-  return (str_eq_char(s, "if") || str_eq_char(s, "for"));
+  return (str_eq_char(s, "if"));
 }
 
 static int _is_escapable(char c) {

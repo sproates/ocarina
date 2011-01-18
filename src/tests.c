@@ -10,6 +10,7 @@
 #include "token.h"
 #include "memory.h"
 #include "script.h"
+#include "parser.h"
 
 /* public function prototypes */
 
@@ -62,6 +63,11 @@ static void lexer_tests(void);
  */
 static void script_tests(void);
 
+/**
+ * Run the tests for the parser functions.
+ */
+static void parser_tests(void);
+
 /* private variables */
 
 /**
@@ -85,6 +91,7 @@ int main(void) {
   string_tests();
   lexer_tests();
   script_tests();
+  parser_tests();
   printf("\n\n----------------------------------\n\n");
   printf("Tests: %d\n", test_count());
   printf("Passed: %d\n", pass_count());
@@ -347,4 +354,29 @@ static void script_tests(void) {
   }
   test_pass();
   scr_del(s);
+}
+
+static void parser_tests(void) {
+  parser * par;
+  lexer * lex;
+
+  printf("Running parser tests...\n");
+
+  printf("Created script.\n");
+  if(0 == (lex = lex_new_file("test.oca"))) {
+    printf("Unable to create lexer.\n");
+    return;
+  }
+  printf("Created lexer.\n");
+  printf("par_new()\n");
+  if(0 == (par = par_new(lex))) {
+    printf("Failed to create parser\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  lex_del(lex);
+  par_del(par);
+
+  printf("Completed parser tests\n");
 }
