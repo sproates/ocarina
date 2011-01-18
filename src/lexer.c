@@ -1,5 +1,9 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
+/**
+ * @file lexer.c
+ */
+
 #include "lexer.h"
 #include "memory.h"
 #include "token.h"

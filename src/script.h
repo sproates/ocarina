@@ -4,6 +4,7 @@
 #define SCRIPT_H
 
 /**
+ * @file script.h
  * Functions for obtaining Ocarina source code.
  */
 

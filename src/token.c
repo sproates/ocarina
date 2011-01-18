@@ -1,5 +1,9 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
+/**
+ * @file token.c
+ */
+
 #include "token.h"
 #include "memory.h"
 #include <stdio.h>

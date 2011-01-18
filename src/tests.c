@@ -1,6 +1,7 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
 /**
+ * @file tests.c
  * A really basic test suite.
  */
 

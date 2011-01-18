@@ -4,6 +4,7 @@
 #define STRING_H
 
 /**
+ * @file string.h
  * A really basic string library, because I hate string.h.
  */
 

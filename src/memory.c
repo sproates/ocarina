@@ -1,5 +1,9 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
+/**
+ * @file memory.c
+ */
+
 #include "memory.h"
 #include <stdlib.h>
 #include <stdio.h>

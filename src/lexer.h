@@ -4,6 +4,7 @@
 #define LEXER_H
 
 /**
+ * @file lexer.h
  * The functions that implement the Ocarina lexical analyser.
  */
 

@@ -4,6 +4,7 @@
 #define TOKEN_H
 
 /**
+ * @file token.h
  * Functions relating to tokens in the Ocarina language.
  */
 

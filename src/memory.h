@@ -4,6 +4,7 @@
 #define MEMORY_H
 
 /**
+ * @file memory.h
  * Memory management functions.
  *
  * At the moment these are just wrappers around malloc, free and realloc.

@@ -1,5 +1,9 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
+/**
+ * @file script.c
+ */
+
 #include "script.h"
 #include "memory.h"
 #include "string.h"

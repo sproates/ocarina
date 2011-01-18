@@ -1,5 +1,9 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
+/**
+ * @file main.c
+ */
+
 #include <stdio.h>
 
 /* public function prototypes */
