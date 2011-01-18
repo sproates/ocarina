@@ -1,4 +1,3 @@
-src/*.oca
 *.o
 *.exe
 doc/doxygen

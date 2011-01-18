@@ -10,10 +10,10 @@ DOXYGEN_DIR = ./doxygen
 
 all: ${DOXYGEN_DIR}
 
-${DOXYGEN_DIR}:
-	${DOXYGEN} doxygen.config
+rebuild: clean all
 
 clean:
 	${RM} ${DOXYGEN_DIR}
 
-rebuild: clean all
+${DOXYGEN_DIR}:
+	${DOXYGEN} doxygen.config

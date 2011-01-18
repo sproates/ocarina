@@ -1,11 +1,11 @@
-.PHONY: all clean rebuild doc app test
+.PHONY: all clean rebuild doc ocarina test
 
 CD = cd
 SRC_DIR = ./src
 DOC_DIR = ./doc
 TEST_DIR = ./tests
 
-all: app doc test
+all: ocarina test
 
 clean:
 	${CD} ${DOC_DIR} ; ${MAKE} clean
@@ -20,7 +20,7 @@ rebuild:
 doc:
 	${CD} ${DOC_DIR} ; ${MAKE} all
 
-app:
+ocarina:
 	${CD} ${SRC_DIR} ; ${MAKE} all
 
 test: app
