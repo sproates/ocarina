@@ -8,7 +8,7 @@
  *
  * At the moment these are just wrappers around malloc, free and realloc.
  *
- * They are useful for debugging purposes. When there is a memory issu , we can
+ * They are useful for debugging purposes. When there is a memory issue, we can
  * drop some logging into them.
 */
 
