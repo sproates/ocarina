@@ -1,6 +1,10 @@
+/* Copyright 2011 Ian Sproates <ian@sproates.net> */
+
 #include "memory.h"
 #include <stdlib.h>
 #include <stdio.h>
+
+/* public function definitions */
 
 void * mem_alloc(size_t size) {
   return malloc(size);

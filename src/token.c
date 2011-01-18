@@ -1,15 +1,11 @@
+/* Copyright 2011 Ian Sproates <ian@sproates.net> */
+
 #include "token.h"
 #include "memory.h"
 #include <stdio.h>
 
 /* public function definitions */
 
-/**
- * Constructs a new token.
- * @param type The type of token to create.
- * @param data The data associated with the token.
- * @return The token on success, 0 on failure.
- */
 token * tok_new(tok_type type, string * data) {
   token * tok;
   if(0 == (tok = mem_alloc(sizeof(token)))) { return 0; }
@@ -18,20 +14,12 @@ token * tok_new(tok_type type, string * data) {
   return tok;
 }
 
-/**
- * Delete a token.
- * @param tok The token to delete.
- */
 void tok_delete(token * tok) {
   if(0 == tok) { return; }
   str_del(tok->data);
   mem_free(tok);
 }
 
-/**
- * Print a representation of a token to standard output.
- * @param tok The token.
- */
 void tok_print(token * tok) {
   printf("Token {\n\tType: ");
   switch(tok->type) {

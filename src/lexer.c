@@ -1,36 +1,139 @@
+/* Copyright 2011 Ian Sproates <ian@sproates.net> */
+
 #include "lexer.h"
 #include "memory.h"
 #include "token.h"
 #include "script.h"
-#include <stdio.h>
 
 /* private function prototypes */
 
-int _is_int(char c);
-int _is_space(char c);
-int _is_str_end(char c);
-int _is_id(char c);
-int _is_id_start(char c);
-int _is_alpha(char c);
-int _is_ctrl_char(char c);
-int _is_keyword(string * s);
-int _is_escapable(char c);
-int _is_escape(char c);
-char _lex_next_char(lexer * lex);
-char _make_escape(char c);
-token * _token_ctrl_char(char c);
-token * _tok_new(lexer * lex, tok_type type, lex_state state);
-lexer * _lex_adv(lexer * lex);
-lexer * _lex_set_state(lexer * lex, lex_state state);
-lexer * _lex_set_char(lexer * lex, const char c);
+/**
+ * Determine whether a char is an integer.
+ * @param c The char.
+ * @return 1 if it is, 0 if it isn't.
+ */
+static int _is_int(char c);
+
+/**
+ * Determine whether a char is a whitespace.
+ * @param c The char.
+ * @return 1 if it is, 0 if it isn't.
+ */
+static int _is_space(char c);
+
+/**
+ * Determine whether a char is a string delimiter.
+ * @param c The char.
+ * @return 1 if it is, 0 if it isn't.
+ */
+static int _is_str_end(char c);
+
+/**
+ * Determine whether a char is a letter of the alphabet i.e. [a-zA-Z]
+ * @param c The char.
+ * @return 1 if it is, 0 if it isn't.
+ */
+static int _is_alpha(char c);
+
+/**
+ * Determine whether a char is a valid character of an identifier.
+ * @param c The char.
+ * @return 1 if it is, 0 if it isn't.
+ */
+static int _is_id(char c);
+
+/**
+ * Determine whether a char is a valid starting character of an identifier.
+ * @param c The char.
+ * @return 1 if it is, 0 if it isn't.
+ */
+static int _is_id_start(char c);
+
+/**
+ * Determine whether a char is a control character.
+ *
+ * @param c The char.
+ *
+ * @return 1 if the char is a control character, 0 if it isn't.
+ */
+static int _is_ctrl_char(char c);
+
+/**
+ * Determine whether a string is a keyword.
+ * @param s The string.
+ * @return 1 if the string is a keyword, 0 if it isn't.
+ */
+static int _is_keyword(string * s);
+
+/**
+ * Determine whether a character is escapable.
+ * @param c The character.
+ * @return Non-zero if the character is escapable, 0 if it isn't.
+ */
+static int _is_escapable(char c);
+
+/**
+ * Determine whether a character is an escape character.
+ * @param c The character.
+ * @return Non-zero if the character is an escape character, 0 if it isn't.
+ */
+static int _is_escape(char c);
+
+/**
+ * Make an escaped character from a char.
+ * @param c The char.
+ * @return An escaped character.
+ */
+static char _make_escape(char c);
+
+/**
+ * Get the next character from a lexer.
+ * @param lex The lexer.
+ * @return char The next character from the lexer (EOF on end of file).
+ */
+static char _lex_next_char(lexer * lex);
+
+/**
+ * Construct a control type token from a char.
+ * @param c The char.
+ * @return The token on success, 0 on failure.
+ */
+static token * _token_ctrl_char(char c);
+
+/**
+ * Create a new token from a lexer, and leave the lexer in a given state.
+ * @param lex The lexer.
+ * @param type The type of token to create.
+ * @param state The state to leave the lexer in.
+ * @return The newly created token.
+ */
+static token * _tok_new(lexer * lex, tok_type type, lex_state state);
+
+/**
+ * Move a lexer onto its next input character.
+ * @param lex The lexer.
+ * @return The modified lexer.
+ */
+static lexer * _lex_adv(lexer * lex);
+
+/**
+ * Set the state of a lexer.
+ * @param lex The lexer.
+ * @param state The state.
+ * @return The modified lexer.
+ */
+static lexer * _lex_set_state(lexer * lex, lex_state state);
+
+/**
+ * Set the current char of a lexer.
+ * @param lex The lexer.
+ * @param c The char.
+ * @return The lexer.
+ */
+static lexer * _lex_set_char(lexer * lex, const char c);
 
 /* public function definitions */
 
-/**
- * Create a new lexer instance.
- * @param script Handle to an open source file.
- * @return A pointer to a lexer on success, zero on failure.
- */
 lexer * lex_new(script * s) {
   lexer * lex;
   if(0 == (lex = mem_alloc(sizeof(* lex)))) { return 0; }
@@ -40,21 +143,12 @@ lexer * lex_new(script * s) {
   return lex;
 }
 
-/**
- * Create a new lexer instance from a filename.
- * @param script Handle to an open source file.
- * @return A pointer to a lexer on success, zero on failure.
- */
 lexer * lex_new_file(const char * filename) {
   script * s;
   if(0 == (s = scr_new(SCR_FILE, filename))) { return 0; }
   return lex_new(s);
 }
 
-/**
- * Destructs a lexer.
- * @param lex The lexer to delete.
- */
 void lex_del(lexer * lex) {
   if(0 == lex) { return; }
   scr_del(lex->s);
@@ -62,11 +156,6 @@ void lex_del(lexer * lex) {
   mem_free(lex);
 }
 
-/**
- * Obtains the next token from a lexer.
- * @param lex The lexer from which to obtain a token.
- * @return A token.
- */
 token * lex_next(lexer * lex) {
   switch(lex->state) {
     case LEX_DEF:
@@ -113,116 +202,58 @@ token * lex_next(lexer * lex) {
 
 /* private function definitions */
 
-/**
- * Determine whether a char is an integer.
- * @param c The char.
- * @return 1 if it is, 0 if it isn't.
- */
-int _is_int(char c) {
+static int _is_int(char c) {
   return ('0' <= c && '9' >= c);
 }
 
-/**
- * Determine whether a char is a whitespace.
- * @param c The char.
- * @return 1 if it is, 0 if it isn't.
- */
-int _is_space(char c) {
+static int _is_space(char c) {
   return ('\t' == c || '\r' == c || '\n' == c || ' ' == c);
 }
 
-/**
- * Determine whether a char is a string delimiter.
- * @param c The char.
- * @return 1 if it is, 0 if it isn't.
- */
-int _is_str_end(char c) {
+static int _is_str_end(char c) {
   return ('"' == c);
 }
 
-/**
- * Determine whether a char is a letter of the alphabet i.e. [a-zA-Z]
- * @param c The char.
- * @return 1 if it is, 0 if it isn't.
- */
-int _is_alpha(char c) {
+static int _is_alpha(char c) {
   return (('A' <= c && 'Z' >= c) || ('a' <= c && 'z' >= c));
 }
 
-/**
- * Determine whether a char is a valid character of an identifier.
- * @param c The char.
- * @return 1 if it is, 0 if it isn't.
- */
-int _is_id(char c) {
+static int _is_id(char c) {
   return (_is_id_start(c) || _is_int(c));
 }
 
-/**
- * Determine whether a char is a valid starting character of an identifier.
- * @param c The char.
- * @return 1 if it is, 0 if it isn't.
- */
-int _is_id_start(char c) {
+static int _is_id_start(char c) {
   return (_is_alpha(c) || '_' == c);
 }
 
-/**
- * Determine whether a char is a control character.
- *
- * @param c The char.
- *
- * @return 1 if the char is a control character, 0 if it isn't.
- */
-int _is_ctrl_char(char c) {
+static int _is_ctrl_char(char c) {
   return ('(' == c || ')' == c || '[' == c || ']' == c || '{' == c || '}' == c);
 }
 
-/**
- * Determine whether a string is a keyword.
- * @param s The string.
- * @return 1 if the string is a keyword, 0 if it isn't.
- */
-int _is_keyword(string * s) {
+static int _is_keyword(string * s) {
   return (str_eq_char(s, "if") || str_eq_char(s, "for"));
 }
 
-/**
- * Determine whether a character is escapable.
- * @param c The character.
- * @return Non-zero if the character is escapable, 0 if it isn't.
- */
-int _is_escapable(char c) {
+static int _is_escapable(char c) {
   return ('n' == c || 'r' == c || 't' == c || '"' == c || '\\' == c);
 }
 
-/**
- * Make an escaped character from a char.
- * @param c The char.
- * @return An escaped character.
- */
-char _make_escape(char c) {
+static int _is_escape(char c) {
+  return ('\\' == c);
+}
+
+static char _make_escape(char c) {
   if('n' == c) { return '\n'; }
   if('r' == c) { return '\r'; }
   if('t' == c) { return '\t'; }
   return c;
 }
 
-/**
- * Determine whether a character is an escape character.
- * @param c The character.
- * @return Non-zero if the character is an escape character, 0 if it isn't.
- */
-int _is_escape(char c) {
-  return ('\\' == c);
+static char _lex_next_char(lexer * lex) {
+  return scr_next(lex->s);
 }
 
-/**
- * Construct a control type token from a char.
- * @param c The char.
- * @return The token on success, 0 on failure.
- */
-token * _token_ctrl_char(char c) {
+static token * _token_ctrl_char(char c) {
   tok_type type;
   switch(c) {
     case '}':
@@ -250,54 +281,7 @@ token * _token_ctrl_char(char c) {
   return tok_new(type, 0);
 }
 
-/**
- * Move a lexer onto its next input character.
- * @param lex The lexer.
- * @return The modified lexer.
- */
-lexer * _lex_adv(lexer * lex) {
-  return _lex_set_char(lex, _lex_next_char(lex));
-}
-
-/**
- * Get the next character from a lexer.
- * @param lex The lexer.
- * @return char The next character from the lexer (EOF on end of file).
- */
-char _lex_next_char(lexer * lex) {
-  return scr_next(lex->s);
-}
-
-/**
- * Set the state of a lexer.
- * @param lex The lexer.
- * @param state The state.
- * @return The modified lexer.
- */
-lexer * _lex_set_state(lexer * lex, lex_state state) {
-  if(lex) { lex->state = state; }
-  return lex;
-}
-
-/**
- * Set the current char of a lexer.
- * @param lex The lexer.
- * @param c The char.
- * @return The lexer.
- */
-lexer * _lex_set_char(lexer * lex, const char c) {
-  if(lex) { lex->current_char = c; }
-  return lex;
-}
-
-/**
- * Create a new token from a lexer, and leave the lexer in a given state.
- * @param lex The lexer.
- * @param type The type of token to create.
- * @param state The state to leave the lexer in.
- * @return The newly created token.
- */
-token * _tok_new(lexer * lex, tok_type type, lex_state state) {
+static token * _tok_new(lexer * lex, tok_type type, lex_state state) {
   token * t;
   if(lex) {
     t = tok_new(type, lex->tok_buf);
@@ -305,4 +289,18 @@ token * _tok_new(lexer * lex, tok_type type, lex_state state) {
     _lex_set_state(lex, state);
   }
   return t;
+}
+
+static lexer * _lex_adv(lexer * lex) {
+  return _lex_set_char(lex, _lex_next_char(lex));
+}
+
+static lexer * _lex_set_state(lexer * lex, lex_state state) {
+  if(lex) { lex->state = state; }
+  return lex;
+}
+
+static lexer * _lex_set_char(lexer * lex, const char c) {
+  if(lex) { lex->current_char = c; }
+  return lex;
 }

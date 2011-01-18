@@ -1,3 +1,9 @@
+/* Copyright 2011 Ian Sproates <ian@sproates.net> */
+
+/**
+ * A really basic test suite.
+ */
+
 #include <stdio.h>
 #include "string.h"
 #include "lexer.h"
@@ -5,41 +11,75 @@
 #include "memory.h"
 #include "script.h"
 
+/* public function prototypes */
 
-int string_tests(void);
-int lexer_tests(void);
-int script_tests(void);
-void test_pass(void);
-void test_fail(void);
-int test_count(void);
-int fail_count(void);
-int pass_count(void);
+/**
+ * Entry point for the test suite.
+ *
+ * @return Zero on success, non-zero if at least one test fails.
+ */
+int main(void);
 
+/* private function prototypes */
+
+/**
+ * Indicate that a test has been passed.
+ */
+static void test_pass(void);
+
+/**
+ * Indicate that a test has been failed.
+ */
+static void test_fail(void);
+
+/**
+ * Get the number of tests that have been run.
+ */
+static int test_count(void);
+
+/**
+ * Get the number of tests that have been passed.
+ */
+static int pass_count(void);
+
+/**
+ * Get the number of tests that have been failed.
+ */
+static int fail_count(void);
+
+/**
+ * Run the tests for the string functions.
+ */
+static void string_tests(void);
+
+/**
+ * Run the tests for the lexer functions.
+ */
+static void lexer_tests(void);
+
+/**
+ * Run the tests for the script functions.
+ */
+static void script_tests(void);
+
+/* private variables */
+
+/**
+ * The number of tests that have been run.
+ */
 int number_of_tests = 0;
+
+/**
+ * The number of tests that have been passed.
+ */
 int passed_tests = 0;
+
+/**
+ * The number of tests that have been failed.
+ */
 int failed_tests = 0;
 
-void test_pass(void) {
-  number_of_tests++;
-  passed_tests++;
-}
-
-void test_fail(void) {
-  number_of_tests++;
-  failed_tests++;
-}
-
-int test_count(void) {
-  return number_of_tests;
-}
-
-int fail_count(void) {
-  return failed_tests;
-}
-
-int pass_count(void) {
-  return passed_tests;
-}
+/* public function definitions */
 
 int main(void) {
   string_tests();
@@ -52,7 +92,31 @@ int main(void) {
   return (0 != fail_count());
 }
 
-int string_tests(void) {
+/* private function definitions */
+
+static void test_pass(void) {
+  number_of_tests++;
+  passed_tests++;
+}
+
+static void test_fail(void) {
+  number_of_tests++;
+  failed_tests++;
+}
+
+static int test_count(void) {
+  return number_of_tests;
+}
+
+static int fail_count(void) {
+  return failed_tests;
+}
+
+static int pass_count(void) {
+  return passed_tests;
+}
+
+static void string_tests(void) {
   string * s;
   char c;
 
@@ -63,13 +127,13 @@ int string_tests(void) {
   if(0 == s) {
     printf("Failed to create new string\n");
     test_fail();
-    return 1;
+    return;
   }
   test_pass();
   if(11 != s->length) {
     printf("String length is incorrect\n");
     test_fail();
-    return 1;
+    return;
   }
   test_pass();
 
@@ -77,7 +141,7 @@ int string_tests(void) {
   if(0 == str_add(s, '!')) {
     printf("Append failed\n");
     test_fail();
-    return 1;
+    return;
   }
   test_pass();
   if(12 != s->length) {
@@ -194,10 +258,9 @@ int string_tests(void) {
   str_del(s);
 
   printf("Completed string tests\n");
-  return 0;
 }
 
-int lexer_tests(void) {
+static void lexer_tests(void) {
   script * scr;
   lexer * lex;
   token * tok;
@@ -206,12 +269,12 @@ int lexer_tests(void) {
 
   if(0 == (scr = scr_new(SCR_FILE, "test.oca"))) {
     printf("Could not create script\n");
-    return 1;
+    return;
   }
   printf("Created script.\n");
   if(0 == (lex = lex_new_file("test.oca"))) {
     printf("Unable to create lexer.\n");
-    return 1;
+    return;
   }
   printf("Created lexer.\n");
   while(1) {
@@ -230,10 +293,9 @@ int lexer_tests(void) {
   lex_del(lex);
 
   printf("Completed lexer tests\n");
-  return 0;
 }
 
-int script_tests(void) {
+static void script_tests(void) {
   script * s;
   char c;
 
@@ -243,7 +305,7 @@ int script_tests(void) {
   if(0 == (s = scr_new(SCR_FILE, "test.oca"))) {
     printf("Failed to create a new script\n");
     test_fail();
-    return 1;
+    return;
   }
   test_pass();
 
@@ -259,7 +321,7 @@ int script_tests(void) {
   if(0 == (s = scr_new(SCR_STR, "abc"))) {
     printf("Failed to create a new script\n");
     test_fail();
-    return 1;
+    return;
   }
   test_pass();
 
@@ -284,8 +346,5 @@ int script_tests(void) {
     test_fail();
   }
   test_pass();
-  
   scr_del(s);
-
-  return 0;
 }

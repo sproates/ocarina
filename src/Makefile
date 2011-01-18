@@ -1,3 +1,5 @@
+# Copyright 2011 Ian Sproates <ian@sproates.net>
+
 .PHONY: all clean loc rebuild
 
 CC = gcc
