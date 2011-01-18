@@ -1,8 +1,8 @@
 /* Copyright 2011 Ian Sproates <ian@sproates.net> */
 
 /**
- * @file tests.c
- * A really basic test suite.
+ * @file unit_tests.c
+ * A really basic unit test suite.
  */
 
 #include <stdio.h>

@@ -5,14 +5,15 @@
 CC = gcc
 RM = rm -rf
 SRC_DIR = ../src
-
 DOXYGEN = doxygen
 DOXYGEN_DIR = ./doxygen
 
-rebuild: clean all
+all: ${DOXYGEN_DIR}
+
+${DOXYGEN_DIR}:
+	${DOXYGEN} doxygen.config
 
 clean:
 	${RM} ${DOXYGEN_DIR}
 
-all: doxygen.config
-	${DOXYGEN} doxygen.config
+rebuild: clean all
