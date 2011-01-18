@@ -33,25 +33,41 @@ typedef enum  {
  * tokenizing Ocarina source code.
  */
 typedef struct {
+
+  /**
+   * The current state of the lexer.
+   */
   lex_state state;
-  FILE * script;
+
+  /**
+   * Buffer used to collect character data for the current token.
+   */
   string * tok_buf;
+
+  /**
+   * The character currently being examined.
+   */
   char current_char;
+
+  /**
+   * The script source from which the lexer obtains characters.
+   */
   script * s;
+
 } lexer;
 
 /* public function prototypes */
 
 /**
  * Create a new lexer instance.
- * @param script Handle to an open source file.
+ * @param s The script from which to obtain source characters.
  * @return A pointer to a lexer on success, zero on failure.
  */
 lexer * lex_new(script * s);
 
 /**
  * Create a new lexer instance from a filename.
- * @param script Handle to an open source file.
+ * @param filename Name of a file containing source script.
  * @return A pointer to a lexer on success, zero on failure.
  */
 lexer * lex_new_file(const char * filename);

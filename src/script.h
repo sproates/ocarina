@@ -17,20 +17,54 @@
  * Represents a script that originates as a file.
  */
 typedef struct {
+
+  /**
+   * The name of the file containing the script.
+   */
   const char * filename;
+
+  /**
+   * The file containing the script.
+   */
   FILE * f;
+
+  /**
+   * Buffer used while reading the file in chunks.
+   */
   char * buf;
+
+  /**
+   * The size of the input buffer.
+   */
   unsigned int buf_size;
+
+  /**
+   * The maximum size of the input buffer.
+   */
   unsigned int max_buf;
+
+  /**
+   * The position of the current character within the input buffer.
+   */
   unsigned int pos;
+
 } file_script;
 
 /**
  * Represents a script that originates as a string.
  */
 typedef struct {
+
+  /**
+   * The string containing the script.
+   */
   string * s;
+
+  /**
+   * The current position within the string.
+   */
   int pos;
+
 } string_script;
 
 /**
@@ -45,16 +79,34 @@ typedef enum {
  * Pseudo-inheritance for script types.
  */
 typedef union {
+
+  /**
+   * String script type.
+   */
   string_script * s;
+
+  /**
+   * File script type.
+   */
   file_script * f;
+
 } script_impl;
 
 /**
  * Represents the abstract concept of a script source.
  */
 typedef struct {
+
+  /**
+   * The type of script.
+   */
   script_type type;
+
+  /**
+   * The script implementation in this pseudo-inheritance scheme.
+   */
   script_impl * impl;
+
 } script;
 
 /* public function prototypes */
@@ -62,6 +114,8 @@ typedef struct {
 /**
  * Create a new script instance.
  * @param type The type of script.
+ * @param source In the case of a file script, this is a filename. In the case
+ * of a string script, this is the text of the script.
  * @return A pointer to a script on success, zero on failure.
  */
 script * scr_new(const script_type type, const char * source);

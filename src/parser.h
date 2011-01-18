@@ -26,8 +26,17 @@ typedef enum  {
  * Ocarina tokens.
  */
 typedef struct {
+
+  /**
+   * The current state of the parser.
+   */
   par_state state;
+
+  /**
+   * The lexer from which the parser obtains tokens.
+   */
   lexer * lex;
+
 } parser;
 
 /* public function prototypes */

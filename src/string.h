@@ -14,9 +14,22 @@
  * Represents a common or garden string.
  */
 typedef struct {
+
+  /**
+   * The character data underlying the string.
+   */
   char * data;
+
+  /**
+   * The length of the string (bytes, number of chars really).
+   */
   unsigned int length;
+
+  /**
+   * The size of the currently allocated memory.
+   */
   unsigned int buffer_size;
+
 } string;
 
 /* public function prototypes */

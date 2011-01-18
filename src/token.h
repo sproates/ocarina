@@ -32,8 +32,17 @@ typedef enum {
  * Represents the state of a token emitted by the Ocarina lexer.
  */
 typedef struct {
+
+  /**
+   * The type of the token.
+   */
   tok_type type;
+
+  /**
+   * The raw data associated with the token, as parsed from a script source.
+   */
   string * data;
+
 } token;
 
 /**
