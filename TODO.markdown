@@ -18,7 +18,7 @@ Build
 
 * Refactor build system.
     * Be able to build from the root folder.
-    *Use autoconf / automake.
+    * Use autoconf / automake.
 
 Documentation
 -------------
