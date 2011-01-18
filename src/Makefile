@@ -11,9 +11,6 @@ CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -Wpointer-arith \
 EXE = ./ocarina.exe
 TEST_EXE = ./run_tests.exe
 LIB_OBJS = string.o token.o lexer.o memory.o script.o parser.o
-DOC_DIR = ../doc
-DOXYGEN_DIR = ${DOC_DIR}/doxygen
-DOXYGEN = doxygen
 
 all: ${EXE} ${TEST_EXE}
 	${TEST_EXE}
@@ -26,14 +23,10 @@ ${EXE}: main.o ${LIB_OBJS}
 ${TEST_EXE}: tests.o ${LIB_OBJS}
 	$(CC) -o $@ tests.o ${LIB_OBJS}
 
-doc:
-	${DOXYGEN} ${DOC_DIR}/doxygen.config
-
 clean:
 	${RM} ${EXE}
 	${RM} ${TEST_EXE}
 	${RM} *.o
-	${RM} ${DOXYGEN_DIR}
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
