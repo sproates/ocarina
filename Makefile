@@ -23,5 +23,5 @@ doc:
 ocarina:
 	${CD} ${SRC_DIR} ; ${MAKE} all
 
-test: app
+test: ocarina
 	${CD} ${TEST_DIR} ; ${MAKE} all
