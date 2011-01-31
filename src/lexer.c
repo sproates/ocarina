@@ -287,11 +287,10 @@ static token * _token_ctrl_char(char c) {
 
 static token * _tok_new(lexer * lex, tok_type type, lex_state state) {
   token * t;
-  if(lex) {
-    t = tok_new(type, lex->tok_buf);
-    lex->tok_buf = str_new(0);
-    _lex_set_state(lex, state);
-  }
+  if(!lex) { return 0; }
+  t = tok_new(type, lex->tok_buf);
+  lex->tok_buf = str_new(0);
+  _lex_set_state(lex, state);
   return t;
 }
 
