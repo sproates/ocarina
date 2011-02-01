@@ -13,7 +13,8 @@ EXE = ./run_unit_tests.exe
 OBJ_DIR = ../../src
 SRC_DIR = ../../src
 LIB_OBJS = ${OBJ_DIR}/string.o ${OBJ_DIR}/token.o ${OBJ_DIR}/lexer.o \
-${OBJ_DIR}/memory.o ${OBJ_DIR}/script.o ${OBJ_DIR}/parser.o
+${OBJ_DIR}/memory.o ${OBJ_DIR}/script.o ${OBJ_DIR}/parser.o \
+${OBJ_DIR}/tokenqueue.o
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<

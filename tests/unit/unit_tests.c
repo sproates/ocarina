@@ -12,6 +12,7 @@
 #include "memory.h"
 #include "script.h"
 #include "parser.h"
+#include "tokenqueue.h"
 
 /* public function prototypes */
 
@@ -69,6 +70,11 @@ static void script_tests(void);
  */
 static void parser_tests(void);
 
+/**
+ * Run the tests for the tokenqueue functions.
+ */
+static void tokenqueue_tests(void);
+
 /* private variables */
 
 /**
@@ -93,6 +99,7 @@ int main(void) {
   lexer_tests();
   script_tests();
   parser_tests();
+  tokenqueue_tests();
   printf("\n\n----------------------------------\n\n");
   printf("Tests: %d\n", test_count());
   printf("Passed: %d\n", pass_count());
@@ -380,4 +387,24 @@ static void parser_tests(void) {
   par_del(par);
 
   printf("Completed parser tests\n");
+}
+
+static void tokenqueue_tests(void) {
+  token_queue * q;
+
+  printf("tok_q_new()\n");
+  if(0 == (q = tok_q_new(10))) {
+    printf("Failed to create token queue.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  if(10 != q->max) {
+    printf("Token queue capacity is incorrect.\n");
+    test_fail();
+  }
+  test_pass();
+  tok_q_del(q);
+
+  printf("Completed token queue tests.\n");
 }
