@@ -6,13 +6,13 @@
 /* public structure definitions */
 
 typedef struct {
-  int max;
-  int size;
+  unsigned int max;
+  unsigned int size;
 } token_queue;
 
 /* public function prototypes */
 
-token_queue * tok_q_new(const int size);
+token_queue * tok_q_new(const unsigned int size);
 void tok_q_del(token_queue * q);
 
 #endif

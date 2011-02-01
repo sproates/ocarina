@@ -9,7 +9,7 @@
 
 /* public function definitions */
 
-token_queue * tok_q_new(const int size) {
+token_queue * tok_q_new(const unsigned int size) {
   token_queue * q;
   if(0 == (q = mem_alloc(sizeof(* q)))) { return 0; }
   q->max = size;
