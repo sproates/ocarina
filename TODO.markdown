@@ -9,19 +9,12 @@ Implementation
 Testing
 -------
 
-* Move tests into separate hierarchy.
 * Implement unit tests for core functions.
 * Add functional tests written in Ocarina.
 
 Build
 -----
 
-* Refactor build system.
-    * Be able to build from the root folder.
-    * Use autoconf / automake.
-
-Documentation
--------------
-
-* Hand-maintained documentation should use markdown.
-* Use doxygen to generate source documentation.
+  * Use autoconf / automake?
+  * Add ability to build from alternative directories (to avoid clutter in
+    the source directory).
