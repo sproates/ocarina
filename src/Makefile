@@ -2,7 +2,7 @@
 
 .PHONY: all clean loc rebuild
 
-CC = clang.exe
+CC = gcc
 RM = rm -rf
 INCLUDES = .
 CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -Wpointer-arith \

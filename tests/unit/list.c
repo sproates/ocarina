@@ -200,6 +200,7 @@ void list_tests(void) {
   printf("List data looks ok.\n");
 
   list_del(x);
+  printf("Constructing a list.\n");
 
   x = list_new("a");
   x = list_append(x, list_new("p"));
@@ -208,6 +209,7 @@ void list_tests(void) {
   x = list_append(x, list_new("e"));
 
   y = list_head(x);
+  printf("flag\n");
   while(y) {
     printf("%s", (char *) y->data);
     y = y->next;

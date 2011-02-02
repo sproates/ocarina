@@ -21,8 +21,8 @@ list * list_new(void * data) {
 void list_del(list * x) {
   if(!x) { return; }
   if(x->next) { list_del(x->next); }
+  x->prev = x->next = 0;
   mem_free(x);
-  return;
 }
 
 unsigned int list_size(list * x) {
@@ -54,26 +54,31 @@ list * list_head(list * x) {
 }
 
 list * list_remove(list * x, list * y) {
-  list * z;
+  list * z = 0;
   if(!x) { return 0; }
-  if(x != y) {
-    return list_remove(x->next, y);
-  }
-  if(x->prev) {
-    z = x->prev;
-    z->next = 0;
-    list_del(x);
-    return list_head(z);
-  } else {
-    if(x->next) {
-      z = x->next;
-      x->next = 0;
-      list_del(x);
-      z->prev = 0;
-      return list_head(z);
+  if(x != y) { return list_remove(x->next, y); }
+  if(x->next) {
+    if(x->prev) {
+      /* next AND prev = middle of list */
+      z = list_head(x);
+      x->prev->next = x->next;
+      x->next->prev = x->prev;
+      goto end;
     } else {
-      list_del(x);
-      return 0;
+      /* next NOT prev = head of list */
+      z = x->next;
+      z->prev = 0;
+      goto end;
+    }
+  } else {
+    if(x->prev) {
+      /* prev NOT next = tail of list */
+      z = x->prev;
+      z->next = 0;
+      goto end;
     }
   }
+end:
+  list_del(x);
+  return z;
 }
