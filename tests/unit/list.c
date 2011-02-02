@@ -11,7 +11,7 @@
 /* public function prototypes */
 
 /**
- * Run the tests for the script functions.
+ * Run the tests for the list functions.
  */
 void list_tests(void);
 
@@ -126,4 +126,100 @@ void list_tests(void) {
   test_pass();
 
   list_del(x);
+
+  printf("list_remove()\n");
+  x = list_new("a");
+  y = list_new("b");
+  x = list_append(x, y);
+  x = list_remove(x, y);
+  if(1 != list_size(x)) {
+    printf("New list size is wrong.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  if(list_head(x) != x) {
+    printf("List head is wrong.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  if(list_tail(x) != x) {
+    printf("List tail is wrong.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  if('a' != ((char *) x->data)[0]) {
+    printf("First item in list should be 'a'.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  printf("Removing head of list.\n");
+  x = list_remove(x, x);
+  if(0 != x) {
+    printf("Removing head of size 1 list failed.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  printf("Removed head of size 1 list.\n");
+
+  x = list_new("a");
+  y = list_new("b");
+  x = list_append(x, y);
+  x = list_remove(x, x);
+  if(1 != list_size(x)) {
+    printf("New list size is wrong.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  printf("Removed head of list.\n");
+  if(list_head(x) != x) {
+    printf("List head is wrong.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  printf("List head looks ok.\n");
+  if(list_tail(x) != x) {
+    printf("List tail is wrong.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  printf("List tail looks ok.\n");
+  if('b' != ((char *) x->data)[0]) {
+    printf("First item in list should be 'b'.\n");
+    test_fail();
+    return;
+  }
+  test_pass();
+  printf("List data looks ok.\n");
+
+  list_del(x);
+
+  x = list_new("a");
+  x = list_append(x, list_new("p"));
+  x = list_append(x, list_new("p"));
+  x = list_append(x, list_new("l"));
+  x = list_append(x, list_new("e"));
+
+  y = list_head(x);
+  while(y) {
+    printf("%s", (char *) y->data);
+    y = y->next;
+  }
+  printf("\n");
+
+  if(5 != list_size(x)) {
+    printf("List is the wrong size: %d.\n", list_size(x));
+    test_fail();
+    return;
+  }
+  test_pass();
+
+  printf("Completed list tests.\n");
 }

@@ -10,9 +10,24 @@
 
 /* public structure definitions */
 
+/**
+ * Represents a node in a doubly-linked list that has absolutely no type safety.
+ */
 struct _list {
+
+  /**
+   * The data associated with the node.
+   */
   void * data;
+
+  /**
+   * The previous node in the list. Zero if this node is the head.
+   */
   struct _list * prev;
+
+  /**
+   * The next node in the list. Zero if this is the tail.
+   */
   struct _list * next;
 };
 
