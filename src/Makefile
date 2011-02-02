@@ -9,7 +9,7 @@ CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -Wpointer-arith \
 -Wmissing-prototypes -Wredundant-decls -Winline -pedantic-errors \
 -std=iso9899:1990 -ansi -I${INCLUDES}
 EXE = ./ocarina.exe
-LIB_OBJS = string.o token.o lexer.o memory.o script.o parser.o
+LIB_OBJS = string.o token.o lexer.o memory.o script.o parser.o list.o
 
 all: ${EXE}
 
@@ -37,6 +37,8 @@ token.o: token.c token.h string.h memory.h
 script.o: script.c script.h memory.h string.h
 
 parser.o: parser.c parser.h lexer.h
+
+list.o: list.h
 
 loc:
 	find . -name "*.c" -o -name "*.h" | xargs wc -l

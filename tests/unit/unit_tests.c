@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "unit_tests.h"
 #include "lexer.c"
+#include "list.c"
 #include "string.c"
 #include "script.c"
 #include "parser.c"
@@ -58,6 +59,7 @@ int main(void) {
   lexer_tests();
   script_tests();
   parser_tests();
+  list_tests();
   printf("\n\n----------------------------------\n\n");
   printf("Tests: %d\n", test_count());
   printf("Passed: %d\n", pass_count());

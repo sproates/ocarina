@@ -13,14 +13,15 @@ EXE = ./run_unit_tests.exe
 OBJ_DIR = ../../src
 SRC_DIR = ../../src
 LIB_OBJS = ${OBJ_DIR}/string.o ${OBJ_DIR}/token.o ${OBJ_DIR}/lexer.o \
-${OBJ_DIR}/memory.o ${OBJ_DIR}/script.o ${OBJ_DIR}/parser.o
+${OBJ_DIR}/memory.o ${OBJ_DIR}/script.o ${OBJ_DIR}/parser.o ${OBJ_DIR}/list.o
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 ${EXE}: unit_tests.o ${LIB_OBJS}
 	$(CC) -o $@ unit_tests.o ${LIB_OBJS}
 
-unit_tests.o: unit_tests.h lexer.c parser.c string.c script.c
+unit_tests.o: unit_tests.h lexer.c list.c parser.c string.c script.c
 
 all: ${EXE}
 	${EXE}
