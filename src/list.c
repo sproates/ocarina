@@ -8,6 +8,16 @@
 #include "memory.h"
 #include <stdio.h>
 
+/* private function prototypes */
+
+/**
+ * Make two list nodes consecutive.
+ * @param x Left hand node.
+ * @param y Right hand node.
+ * @return The modified list.
+ */
+static list * _join(list * x, list * y);
+
 /* private variables */
 
 /**
@@ -48,7 +58,7 @@ unsigned int list_size(list * x) {
 }
 
 list * list_append(list * x, list * y) {
-  if(0 == x) { return 0; }
+  if(!x) { return 0; }
   x = list_tail(x);
   x->next = y;
   y->prev = x;
@@ -73,28 +83,14 @@ list * list_remove(list * x, list * y) {
   if(x != y) { return list_remove(x->next, y); }
   if(x->next) {
     if(x->prev) {
-      /* next AND prev = middle of list */
-      z = list_head(x);
-      x->prev->next = x->next;
-      x->next->prev = x->prev;
-      x->next = x->prev = 0;
-      goto end;
+      z = list_head(_join(x->prev, x->next));
     } else {
-      /* next NOT prev = head of list */
-      z = x->next;
-      x->next = 0;
-      z->prev = 0;
-      goto end;
+      z = list_head(_join(0, x->next));
     }
-  } else {
-    if(x->prev) {
-      /* prev NOT next = tail of list */
-      z = x->prev;
-      z->next = 0;
-      goto end;
-    }
+    x->next = 0;
+  } else if(x->prev) {
+    z = list_head(_join(x->prev, 0));
   }
-end:
   list_del(x);
   return z;
 }
@@ -105,4 +101,12 @@ unsigned int list_get_allocated(void) {
 
 unsigned int list_get_freed(void) {
   return list_freed;
+}
+
+/* private function definitions */
+
+static list * _join(list * x, list * y) {
+  if(x) { x->next = y; }
+  if(y) { y->prev = x; }
+  return (x) ? x : y;
 }

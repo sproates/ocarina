@@ -7,11 +7,11 @@
 
 #include <stdio.h>
 #include "unit_tests.h"
-#include "lexer.c"
-#include "list.c"
-#include "string.c"
-#include "script.c"
-#include "parser.c"
+#include "lexer_tests.c"
+#include "list_tests.c"
+#include "string_tests.c"
+#include "script_tests.c"
+#include "parser_tests.c"
 
 /* private variables */
 
