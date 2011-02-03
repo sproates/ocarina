@@ -6,7 +6,6 @@
 
 #include "list.h"
 #include "memory.h"
-#include <stdio.h>
 
 /* private function prototypes */
 

@@ -38,7 +38,9 @@ script.o: script.c script.h memory.h string.h
 
 parser.o: parser.c parser.h lexer.h
 
-list.o: list.h
+list.o: list.h list.c
+
+queue.o: queue.h queue.c
 
 loc:
 	find . -name "*.c" -o -name "*.h" | xargs wc -l
