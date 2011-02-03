@@ -8,6 +8,18 @@
 #include "memory.h"
 #include <stdio.h>
 
+/* private variables */
+
+/**
+ * The number of list nodes that have been allocated.
+ */
+unsigned int list_allocated = 0;
+
+/**
+ * The number of list nodes that have been freed.
+ */
+unsigned int list_freed = 0;
+
 /* public function definitions */
 
 list * list_new(void * data) {
@@ -15,6 +27,7 @@ list * list_new(void * data) {
   if(0 == (x = mem_alloc(sizeof(list)))) { return 0; }
   x->data = data;
   x->next = x->prev = 0;
+  ++list_allocated;
   return x;
 }
 
@@ -23,6 +36,7 @@ void list_del(list * x) {
   if(x->next) { list_del(x->next); }
   x->prev = x->next = 0;
   mem_free(x);
+  ++list_freed;
 }
 
 unsigned int list_size(list * x) {
@@ -46,11 +60,11 @@ list * list_prepend(list * x, list * y) {
 }
 
 list * list_tail(list * x) {
-  return x->next ? list_tail(x->next) : x;
+  return (x && x->next) ? list_tail(x->next) : x;
 }
 
 list * list_head(list * x) {
-  return x->prev ? list_head(x->prev) : x;
+  return (x && x->prev) ? list_head(x->prev) : x;
 }
 
 list * list_remove(list * x, list * y) {
@@ -63,10 +77,12 @@ list * list_remove(list * x, list * y) {
       z = list_head(x);
       x->prev->next = x->next;
       x->next->prev = x->prev;
+      x->next = x->prev = 0;
       goto end;
     } else {
       /* next NOT prev = head of list */
       z = x->next;
+      x->next = 0;
       z->prev = 0;
       goto end;
     }
@@ -81,4 +97,12 @@ list * list_remove(list * x, list * y) {
 end:
   list_del(x);
   return z;
+}
+
+unsigned int list_get_allocated(void) {
+  return list_allocated;
+}
+
+unsigned int list_get_freed(void) {
+  return list_freed;
 }

@@ -32,14 +32,16 @@ int failed_tests = 0;
 
 /* public function definitions */
 
-void test_pass(void) {
+unsigned int test_pass(void) {
   number_of_tests++;
   passed_tests++;
+  return 0;
 }
 
-void test_fail(void) {
+unsigned int test_fail(void) {
   number_of_tests++;
   failed_tests++;
+  return 0;
 }
 
 int test_count(void) {

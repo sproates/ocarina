@@ -93,4 +93,16 @@ list * list_tail(list * x);
  */
 unsigned int list_size(list * x);
 
+/**
+ * Get the number of list nodes that have been allocated.
+ * @return The number of allocated list nodes.
+ */
+unsigned int list_get_allocated(void);
+
+/**
+ * Get the number of list nodes that have been freed.
+ * @return The number of freed list nodes.
+ */
+unsigned int list_get_freed(void);
+
 #endif
