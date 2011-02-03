@@ -59,6 +59,7 @@ unsigned int list_size(list * x) {
 
 list * list_append(list * x, list * y) {
   if(!x) { return 0; }
+  if(!y) { return x; }
   x = list_tail(x);
   x->next = y;
   y->prev = x;
