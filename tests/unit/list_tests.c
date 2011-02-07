@@ -7,6 +7,7 @@
 
 #include "list.h"
 #include "unit_tests.h"
+#include <stdio.h>
 
 /* public function prototypes */
 
