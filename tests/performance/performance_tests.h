@@ -17,4 +17,11 @@
  */
 int main(void);
 
+/**
+ * Run a function and determine how many milliseconds of CPU time it took.
+ * @param func The function to run.
+ * @return The CPU run time of the function in milliseconds.
+ */
+unsigned int time_func(void (*func)(void));
+
 #endif

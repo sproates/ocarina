@@ -22,7 +22,7 @@ ${OBJ_DIR}/queue.o ${OBJ_DIR}/stack.o
 ${EXE}: performance_tests.o ${LIB_OBJS}
 	$(CC) -o $@ performance_tests.o ${LIB_OBJS}
 
-performance_tests.o: performance_tests.h
+performance_tests.o: performance_tests.h performance_tests.c list_tests.c
 
 all: ${EXE}
 	${EXE}
