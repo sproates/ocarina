@@ -31,6 +31,9 @@ struct _list {
   struct _list * next;
 };
 
+/**
+ * Represents a node in a doubly-linked list.
+ */
 typedef struct _list list;
 
 /* public function prototypes */
