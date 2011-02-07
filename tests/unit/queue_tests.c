@@ -267,5 +267,71 @@ void queue_tests(void) {
     return;
   }
 
+  printf("Testing pop on an empty queue\n");
+  if(0 == (q = q_new()) || test_pass()) {
+    printf("Failed to create queue.\n");
+    test_fail();
+    return;
+  }
+  if(7 != q_get_allocated() || test_pass()) {
+    printf("Should be 7 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(6 != q_get_freed() || test_pass()) {
+    printf("Should be 6 queues freed\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_pop(q) || test_pass()) {
+    printf("Popping an empty queue should return zero.\n");
+    test_fail();
+    return;
+  }
+  q_del(q);
+  if(7 != q_get_allocated() || test_pass()) {
+    printf("Should be 7 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(7 != q_get_freed() || test_pass()) {
+    printf("Should be 7 queues freed\n");
+    test_fail();
+    return;
+  }
+
+  printf("Testing front on an empty queue\n");
+  if(0 == (q = q_new()) || test_pass()) {
+    printf("Failed to create queue.\n");
+    test_fail();
+    return;
+  }
+  if(8 != q_get_allocated() || test_pass()) {
+    printf("Should be 8 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(7 != q_get_freed() || test_pass()) {
+    printf("Should be 7 queues freed\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_front(q) || test_pass()) {
+    printf("Front of an empty queue should be zero.\n");
+    test_fail();
+    return;
+  }
+  q_del(q);
+  if(8 != q_get_allocated() || test_pass()) {
+    printf("Should be 8 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(8 != q_get_freed() || test_pass()) {
+    printf("Should be 8 queues freed\n");
+    test_fail();
+    return;
+  }
+
   printf("Completed queue tests.\n");
 }
