@@ -61,8 +61,7 @@ list * list_append(list * x, list * y) {
   if(!y) { return x; }
   x = list_tail(x);
   x->next = y;
-  y->prev = x;
-  return list_head(x);
+  return list_head(y->prev = x);
 }
 
 list * list_prepend(list * x, list * y) {
@@ -82,15 +81,9 @@ list * list_remove(list * x, list * y) {
   if(!x) { return 0; }
   if(x != y) { return list_remove(x->next, y); }
   if(x->next) {
-    if(x->prev) {
-      z = list_head(_join(x->prev, x->next));
-    } else {
-      z = list_head(_join(0, x->next));
-    }
+    z = list_head(_join((x->prev) ? x->prev : 0, x->next));
     x->next = 0;
-  } else if(x->prev) {
-    z = list_head(_join(x->prev, 0));
-  }
+  } else if(x->prev) { z = list_head(_join(x->prev, 0)); }
   list_del(x);
   return z;
 }
