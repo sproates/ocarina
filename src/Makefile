@@ -1,6 +1,6 @@
 # Copyright 2011 Ian Sproates <ian@sproates.net>
 
-.PHONY: all clean loc rebuild
+.PHONY: all clean rebuild
 
 CC = gcc
 RM = rm -rf
@@ -9,7 +9,8 @@ CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -Wpointer-arith \
 -Wmissing-prototypes -Wredundant-decls -Winline -pedantic-errors \
 -std=iso9899:1990 -ansi -I${INCLUDES}
 EXE = ./ocarina.exe
-LIB_OBJS = string.o token.o lexer.o memory.o script.o parser.o list.o
+LIB_OBJS = string.o token.o lexer.o memory.o script.o parser.o list.o stack.o \
+queue.o
 
 all: ${EXE}
 
@@ -26,21 +27,18 @@ clean:
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-tests.o: tests.c lexer.h string.h token.h memory.h script.h parser.h
+lexer.o: lexer.h lexer.c string.o token.o memory.o script.o
 
-lexer.o: lexer.c lexer.h string.h token.h memory.h script.h
+string.o: string.h string.c memory.o
 
-string.o: string.c string.h memory.h
+token.o: token.c token.h string.o memory.o
 
-token.o: token.c token.h string.h memory.h
+script.o: script.c script.h memory.o string.o
 
-script.o: script.c script.h memory.h string.h
-
-parser.o: parser.c parser.h lexer.h
+parser.o: parser.h parser.c lexer.o queue.o
 
 list.o: list.h list.c
 
-queue.o: queue.h queue.c
+queue.o: queue.h queue.c list.o
 
-loc:
-	find . -name "*.c" -o -name "*.h" | xargs wc -l
+stack.o: stack.h stack.c list.o

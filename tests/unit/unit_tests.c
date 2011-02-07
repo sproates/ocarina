@@ -10,6 +10,7 @@
 #include "lexer_tests.c"
 #include "list_tests.c"
 #include "queue_tests.c"
+#include "stack_tests.c"
 #include "string_tests.c"
 #include "script_tests.c"
 #include "parser_tests.c"
@@ -64,6 +65,7 @@ int main(void) {
   parser_tests();
   list_tests();
   queue_tests();
+  stack_tests();
   printf("\n\n----------------------------------\n\n");
   printf("Tests: %d\n", test_count());
   printf("Passed: %d\n", pass_count());

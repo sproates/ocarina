@@ -1,6 +1,6 @@
 # Copyright 2011 Ian Sproates <ian@sproates.net>
 
-.PHONY: all clean rebuild doc ocarina test
+.PHONY: all clean rebuild doc ocarina test loc
 
 CD = cd
 SRC_DIR = ./src
@@ -27,3 +27,6 @@ ocarina:
 
 test: ocarina
 	${CD} ${TEST_DIR} ; ${MAKE} all
+
+loc:
+	find . -name "*.c" -o -name "*.h" | xargs wc -l
