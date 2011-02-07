@@ -4,6 +4,7 @@
 
 all:
 	cd unit; ${MAKE} all
+	cd performance; ${MAKE} all
 
 clean:
 	cd unit; ${MAKE} clean
