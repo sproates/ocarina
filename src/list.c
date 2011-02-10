@@ -6,6 +6,7 @@
 
 #include "list.h"
 #include "memory.h"
+#include <stdio.h>
 
 /* private function prototypes */
 
@@ -69,17 +70,28 @@ list * list_prepend(list * x, list * y) {
 }
 
 list * list_tail(list * x) {
-  return (x && x->next) ? list_tail(x->next) : x;
+  list * y;
+  if(!x || !x->next) { return x; }
+  y = x->next;
+  while(y->next) { y = y->next; }
+  return y;
 }
 
 list * list_head(list * x) {
-  return (x && x->prev) ? list_head(x->prev) : x;
+  list * y;
+  if(!x || !x->prev) { return x; }
+  y = x->prev;
+  while(y->prev) { y = y->prev; }
+  return y;
 }
 
 list * list_remove(list * x, list * y) {
   list * z = 0;
   if(!x) { return 0; }
-  if(x != y) { return list_remove(x->next, y); }
+  if(x != y) {
+    while(x != y && x->next) { x = x->next; }
+    if(x != y  && !x->next) { return x; }
+  }
   if(x->next) {
     z = list_head(_join((x->prev) ? x->prev : 0, x->next));
     x->next = 0;
