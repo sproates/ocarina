@@ -15,14 +15,17 @@ Ocarina syntax
     string-delim      = '"' ;
     string            = string-delim , { all-chars - string-delim } , string-delim ;
 
-    block             = [whitespace] , "{" , [whitespace] , { statement , [whitespace] } , "}" ;
+    block             = [whitespace] , "{" , [whitespace] , { expression , [whitespace] } , "}" ;
     module            = "module" , [block] ;
-    expression        = declaration | call;
 
     alpha             = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
     identifier        = alpha , { alpha | digit } ;
 
-    declaration       = identifier , [whitespace] , "<-" , [whitespace] | expression ;
     call              = identifier , param-list ;
     param             = natural | real | string | identifier ;
-    param-list        = "(", ")" | "(" , [{param , "," }] , param , ")" ;
+    param-list        = "(" , whitespace , ")" | "(" , whitespace , [{param , "," whitespace }] , param , whitespace , ")" ;
+    func-definition   = "func" , whitespace , [identifier] , param-list , block ;
+
+    expression        = func-definition | call
+
+    program           = "main" , whitespace , "<-" , block ;
