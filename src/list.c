@@ -6,7 +6,6 @@
 
 #include "list.h"
 #include "memory.h"
-#include <stdio.h>
 
 /* private function prototypes */
 
@@ -106,6 +105,10 @@ unsigned int list_get_allocated(void) {
 
 unsigned int list_get_freed(void) {
   return list_freed;
+}
+
+void list_reset_alloc(void) {
+  list_freed = list_allocated = 0;
 }
 
 /* private function definitions */

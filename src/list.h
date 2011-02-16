@@ -108,4 +108,9 @@ unsigned int list_get_allocated(void);
  */
 unsigned int list_get_freed(void);
 
+/**
+ * Reset the number of lists that have been freed and allocated.
+ */
+void list_reset_alloc(void);
+
 #endif
