@@ -99,6 +99,15 @@ list * list_remove(list * x, list * y) {
   return z;
 }
 
+void list_foreach(list * x, void (* func)(void *)) {
+  list * y;
+  if(0 == x) { return; }
+  y = x;
+  do {
+    (* func)(y->data);
+  } while(0 != (y = y->next));
+}
+
 unsigned int list_get_allocated(void) {
   return list_allocated;
 }

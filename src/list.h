@@ -90,6 +90,13 @@ list * list_head(list * x);
 list * list_tail(list * x);
 
 /**
+ * Apply a function to each item in a list.
+ * @param x The list.
+ * @param func The function to apply to each item.
+ */
+void list_foreach(list * x, void (* func)(void *));
+
+/**
  * Get the number of items in a list.
  * @param x The list.
  * @return The number of items in the list.

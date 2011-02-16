@@ -54,6 +54,17 @@ void _test_list_head(void);
 void _test_list_remove(void);
 
 /**
+ * Run the tests for the list_foreach() function.
+ */
+void _test_list_foreach(void);
+
+/**
+ * Assume some list data is a char and print it.
+ * @param data The list data.
+ */
+void _print_list_as_char(void * data);
+
+/**
  * Run the composite list tests.
  */
 void _test_list_composite(void);
@@ -71,6 +82,7 @@ void list_tests(void) {
   _test_list_tail();
   _test_list_remove();
   _test_list_composite();
+  _test_list_foreach();
   
   printf("Completed list tests.\n");
 }
@@ -1021,4 +1033,49 @@ void _test_list_remove(void) {
 
 void _test_list_composite(void) {
   printf("Running composite list tests\n");
+}
+
+void _test_list_foreach(void) {
+  list * x;
+
+  printf("Testing list_foreach()\n");
+
+  list_reset_alloc();
+
+  if(0 != list_get_allocated() || test_pass()) {
+    printf("Should be 0 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+
+  x = list_new("a");
+  list_append(x, list_new("b"));
+  list_append(x, list_new("c"));
+  list_append(x, list_new("d"));
+  list_append(x, list_new("e"));
+  list_append(x, list_new("f"));
+
+  list_foreach(x, &_print_list_as_char);
+  
+  list_del(x);
+
+  if(6 != list_get_allocated() || test_pass()) {
+    printf("Should be 6 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(6 != list_get_freed() || test_pass()) {
+    printf("Should be 6 lists freed\n");
+    test_fail();
+    return;
+  }
+}
+
+void _print_list_as_char(void * data) {
+  printf("%s\n", (char *) data);
 }
