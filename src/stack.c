@@ -7,7 +7,6 @@
 #include "stack.h"
 #include "list.h"
 #include "memory.h"
-#include <stdio.h>
 
 /* private variables */
 
@@ -39,27 +38,11 @@ void stack_del(stack * s) {
 }
 
 stack * stack_push(stack * s, void * data) {
-  printf("stack_push() called\n");
   if(0 == s->data) {
-    printf("stack data is empty, creating it.\n");
-    if(0 == (s->data = list_new(data))) {
-      printf("Failed to create new stack data.\n");
-      return 0;
-    } else {
-      printf("Created new stack data.\n");
-      if(0 == s->data) {
-        printf("But the stack data is still zero.\n");
-      } else {
-        printf("And the stack data is non-zero.\n");
-        printf("list size is now %d\n", list_size(s->data));
-      }
-      return s;
-    }
-    /*return (0 != (s->data = list_new(data))) ? s : 0;*/
+    return (0 != (s->data = list_new(data))) ? s : 0;
   }
-  printf("Prepending data to stack's list.\n");
   list_prepend(s->data, list_new(data));
-  printf("list size is now %d\n", list_size(s->data));
+  s->data = list_head(s->data);
   return s;
 }
 

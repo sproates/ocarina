@@ -291,6 +291,86 @@ void _test_list_append(void) {
     test_fail();
     return;
   }
+
+  list_reset_alloc();
+
+  if(0 != list_get_allocated() || test_pass()) {
+    printf("Should be 0 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+
+  x = list_new("a");
+  x = list_append(x, list_new("p"));
+  x = list_append(x, list_new("p"));
+  x = list_append(x, list_new("l"));
+  x = list_append(x, list_new("e"));
+
+  if(5 != list_get_allocated() || test_pass()) {
+    printf("Should be 5 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+
+  y = list_head(x);
+
+  if(5 != list_size(y) || test_pass()) {
+    printf("List is the wrong size: %d.\n", list_size(y));
+    test_fail();
+    return;
+  }
+  if('a' != ((char *) y->data)[0] || test_pass()) {
+    printf("First item in list should be 'a'.\n");
+    test_fail();
+    return;
+  }
+  y = y->next;
+  if('p' != ((char *) y->data)[0] || test_pass()) {
+    printf("Second item in list should be 'p'.\n");
+    test_fail();
+    return;
+  }
+  y = y->next;
+  if('p' != ((char *) y->data)[0] || test_pass()) {
+    printf("Third item in list should be 'p'.\n");
+    test_fail();
+    return;
+  }
+  y = y->next;
+  if('l' != ((char *) y->data)[0] || test_pass()) {
+    printf("Fourth item in list should be 'l'.\n");
+    test_fail();
+    return;
+  }
+  y = y->next;
+  if('e' != ((char *) y->data)[0] || test_pass()) {
+    printf("Fifth item in list should be 'e'.\n");
+    test_fail();
+    return;
+  }
+
+  list_del(x);
+
+  if(5 != list_get_allocated() || test_pass()) {
+    printf("Should be 5 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(5 != list_get_freed() || test_pass()) {
+    printf("Should be 5 lists freed\n");
+    test_fail();
+    return;
+  }
 }
 
 void _test_list_prepend(void) {
@@ -439,86 +519,6 @@ void _test_list_prepend(void) {
   }
   if(3 != list_get_freed() || test_pass()) {
     printf("Should be 3 lists freed\n");
-    test_fail();
-    return;
-  }
-
-  list_reset_alloc();
-
-  if(0 != list_get_allocated() || test_pass()) {
-    printf("Should be 0 lists allocated\n");
-    test_fail();
-    return;
-  }
-  if(0 != list_get_freed() || test_pass()) {
-    printf("Should be 0 lists freed\n");
-    test_fail();
-    return;
-  }
-
-  x = list_new("a");
-  x = list_append(x, list_new("p"));
-  x = list_append(x, list_new("p"));
-  x = list_append(x, list_new("l"));
-  x = list_append(x, list_new("e"));
-
-  if(5 != list_get_allocated() || test_pass()) {
-    printf("Should be 5 lists allocated\n");
-    test_fail();
-    return;
-  }
-  if(0 != list_get_freed() || test_pass()) {
-    printf("Should be 0 lists freed\n");
-    test_fail();
-    return;
-  }
-
-  y = list_head(x);
-
-  if(5 != list_size(y) || test_pass()) {
-    printf("List is the wrong size: %d.\n", list_size(y));
-    test_fail();
-    return;
-  }
-  if('a' != ((char *) y->data)[0] || test_pass()) {
-    printf("First item in list should be 'a'.\n");
-    test_fail();
-    return;
-  }
-  y = y->next;
-  if('p' != ((char *) y->data)[0] || test_pass()) {
-    printf("Second item in list should be 'p'.\n");
-    test_fail();
-    return;
-  }
-  y = y->next;
-  if('p' != ((char *) y->data)[0] || test_pass()) {
-    printf("Third item in list should be 'p'.\n");
-    test_fail();
-    return;
-  }
-  y = y->next;
-  if('l' != ((char *) y->data)[0] || test_pass()) {
-    printf("Fourth item in list should be 'l'.\n");
-    test_fail();
-    return;
-  }
-  y = y->next;
-  if('e' != ((char *) y->data)[0] || test_pass()) {
-    printf("Fifth item in list should be 'e'.\n");
-    test_fail();
-    return;
-  }
-
-  list_del(x);
-
-  if(5 != list_get_allocated() || test_pass()) {
-    printf("Should be 5 lists allocated\n");
-    test_fail();
-    return;
-  }
-  if(5 != list_get_freed() || test_pass()) {
-    printf("Should be 5 lists freed\n");
     test_fail();
     return;
   }

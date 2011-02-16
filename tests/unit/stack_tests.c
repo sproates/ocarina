@@ -43,6 +43,8 @@ void _test_stack_pop(void);
  */
 void _test_stack_size(void);
 
+void _stack_print(stack * s);
+
 /* public function definitions */
 
 void stack_tests(void) {
@@ -212,6 +214,7 @@ void _test_stack_pop(void) {
     test_fail();
     return;
   }
+
   if(0 == (s = stack_new()) || test_pass()) {
     printf("Failed to create stack.\n");
     test_fail();
@@ -232,31 +235,37 @@ void _test_stack_pop(void) {
     test_fail();
     return;
   }
+
   if(0 == (s = stack_push(s, "a")) || test_pass()) {
     printf("Failed to push an item to the stack.\n");
     test_fail();
     return;
   }
+
   if(1 != stack_size(s) || test_pass()) {
     printf("Stack size should be 1. It is %d.\n", stack_size(s));
     test_fail();
     return;
   }
+
   if(0 == (s = stack_push(s, "b")) || test_pass()) {
     printf("Failed to push an item to the stack.\n");
     test_fail();
     return;
   }
+
   if(2 != stack_size(s) || test_pass()) {
     printf("Stack size should be 2. It is %d.\n", stack_size(s));
     test_fail();
     return;
   }
+
   if(0 == (s = stack_push(s, "c")) || test_pass()) {
     printf("Failed to push an item to the stack.\n");
     test_fail();
     return;
   }
+
   if(3 != stack_size(s) || test_pass()) {
     printf("Stack size should be 3. It is %d.\n", stack_size(s));
     test_fail();
@@ -267,6 +276,7 @@ void _test_stack_pop(void) {
     test_fail();
     return;
   }
+
   if(2 != stack_size(s) || test_pass()) {
     printf("Stack size should be 2. It is %d.\n", stack_size(s));
     test_fail();
@@ -277,6 +287,7 @@ void _test_stack_pop(void) {
     test_fail();
     return;
   }
+
   if(1 != stack_size(s) || test_pass()) {
     printf("Stack size should be 1. It is %d.\n", stack_size(s));
     test_fail();
@@ -287,6 +298,7 @@ void _test_stack_pop(void) {
     test_fail();
     return;
   }
+
   if(0 != stack_size(s) || test_pass()) {
     printf("Stack size should be zero. It is %d.\n", stack_size(s));
     test_fail();
@@ -308,4 +320,3 @@ void _test_stack_pop(void) {
 void _test_stack_size(void) {
 
 }
-
