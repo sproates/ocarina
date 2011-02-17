@@ -67,8 +67,9 @@ int main(void) {
   queue_tests();
   stack_tests();
   printf("\n\n----------------------------------\n\n");
-  printf("Tests: %d\n", test_count());
+  printf("Unit tests: %d\n", test_count());
   printf("Passed: %d\n", pass_count());
   printf("Failed: %d\n", fail_count());
+  printf("\n\n----------------------------------\n\n");
   return (0 != fail_count());
 }
