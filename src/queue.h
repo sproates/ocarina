@@ -77,4 +77,9 @@ unsigned int q_get_allocated(void);
  */
 unsigned int q_get_freed(void);
 
+/**
+ * Reset the number of queues that have been freed and allocated.
+ */
+void q_reset_alloc(void);
+
 #endif

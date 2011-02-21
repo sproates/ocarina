@@ -60,3 +60,5 @@ unsigned int q_size(const queue * q) { return list_size(q->data); }
 unsigned int q_get_allocated(void) { return q_allocated; }
 
 unsigned int q_get_freed(void) { return q_freed; }
+
+void q_reset_alloc(void) { q_freed = q_allocated = 0; }

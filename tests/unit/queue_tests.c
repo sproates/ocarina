@@ -16,12 +16,64 @@
  */
 void queue_tests(void);
 
+/* private function prototypes */
+
+/**
+ * Run the tests for the q_new() function.
+ */
+void _test_q_new(void);
+
+/**
+ * Run the tests for the q_push() function.
+ */
+void _test_q_push(void);
+
+/**
+ * Run the tests for the q_front() function.
+ */
+void _test_q_front(void);
+
+/**
+ * Run the tests for the q_size() function.
+ */
+void _test_q_size(void);
+
+/**
+ * Run the tests for the q_pop() function.
+ */
+void _test_q_pop(void);
+
 /* public function definitions */
 
 void queue_tests(void) {
+  printf("Running queue tests.\n");
+  _test_q_new();
+  _test_q_push();
+  _test_q_front();
+  _test_q_size();
+  _test_q_pop();
+  printf("Completed queue tests.\n");
+}
+
+/* private function definitions */
+
+void _test_q_new(void) {
   queue * q;
 
   printf("Testing q_new()\n");
+
+  q_reset_alloc();
+
+  if(0 != q_get_allocated() || test_pass()) {
+    printf("Should be 0 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_get_freed() || test_pass()) {
+    printf("Should be 0 queues freed\n");
+    test_fail();
+    return;
+  }
 
   if(0 == (q = q_new()) || test_pass()) {
     printf("Failed to create queue.\n");
@@ -38,7 +90,62 @@ void queue_tests(void) {
     test_fail();
     return;
   }
+
   q_del(q);
+
+  if(1 != q_get_allocated() || test_pass()) {
+    printf("Should be 1 queue allocated\n");
+    test_fail();
+    return;
+  }
+  if(1 != q_get_freed() || test_pass()) {
+    printf("Should be 1 queue freed\n");
+    test_fail();
+    return;
+  }
+}
+
+void _test_q_push(void) {
+  queue * q;
+
+  printf("Testing q_push()\n");
+
+  q_reset_alloc();
+
+  if(0 != q_get_allocated() || test_pass()) {
+    printf("Should be 0 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_get_freed() || test_pass()) {
+    printf("Should be 0 queues freed\n");
+    test_fail();
+    return;
+  }
+
+  if(0 == (q = q_new()) || test_pass()) {
+    printf("Failed to create queue.\n");
+    test_fail();
+    return;
+  }
+  if(0 == (q = q_push(q, "a")) || test_pass()) {
+    printf("Failed to push an item to the queue.\n");
+    test_fail();
+    return;
+  }
+  if(1 != q_get_allocated() || test_pass()) {
+    printf("Should be 1 queue allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_get_freed() || test_pass()) {
+    printf("Should be 0 queues freed\n");
+    test_fail();
+    return;
+  }
+
+  q_del(q);
+
   if(1 != q_get_allocated() || test_pass()) {
     printf("Should be 1 queue allocated\n");
     test_fail();
@@ -50,7 +157,18 @@ void queue_tests(void) {
     return;
   }
 
-  printf("Testing q_push()\n");
+  q_reset_alloc();
+
+  if(0 != q_get_allocated() || test_pass()) {
+    printf("Should be 0 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_get_freed() || test_pass()) {
+    printf("Should be 0 queues freed\n");
+    test_fail();
+    return;
+  }
 
   if(0 == (q = q_new()) || test_pass()) {
     printf("Failed to create queue.\n");
@@ -62,8 +180,31 @@ void queue_tests(void) {
     test_fail();
     return;
   }
-  if(2 != q_get_allocated() || test_pass()) {
-    printf("Should be 2 queues allocated\n");
+  if(0 == (q = q_push(q, "b")) || test_pass()) {
+    printf("Failed to push an item to the queue.\n");
+    test_fail();
+    return;
+  }
+  if(0 == (q = q_push(q, "c")) || test_pass()) {
+    printf("Failed to push an item to the queue.\n");
+    test_fail();
+    return;
+  }
+  if(0 == (q = q_push(q, "d")) || test_pass()) {
+    printf("Failed to push an item to the queue.\n");
+    test_fail();
+    return;
+  }
+  if(0 == (q = q_push(q, "e")) || test_pass()) {
+    printf("Failed to push an item to the queue.\n");
+    test_fail();
+    return;
+  }
+
+  q_del(q);
+
+  if(1 != q_get_allocated() || test_pass()) {
+    printf("Should be 1 queue allocated\n");
     test_fail();
     return;
   }
@@ -72,35 +213,32 @@ void queue_tests(void) {
     test_fail();
     return;
   }
-  q_del(q);
-  if(2 != q_get_allocated() || test_pass()) {
-    printf("Should be 2 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(2 != q_get_freed() || test_pass()) {
-    printf("Should be 2 queues freed\n");
-    test_fail();
-    return;
-  }
+}
+
+void _test_q_front(void) {
+  queue * q;
 
   printf("Testing q_front()\n");
+
+  q_reset_alloc();
+
+  if(0 != q_get_allocated() || test_pass()) {
+    printf("Should be 0 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_get_freed() || test_pass()) {
+    printf("Should be 0 queues freed\n");
+    test_fail();
+    return;
+  }
 
   if(0 == (q = q_new()) || test_pass()) {
     printf("Failed to create queue.\n");
     test_fail();
     return;
   }
-  if(3 != q_get_allocated() || test_pass()) {
-    printf("Should be 3 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(2 != q_get_freed() || test_pass()) {
-    printf("Should be 2 queues freed\n");
-    test_fail();
-    return;
-  }
+
   if(0 == (q = q_push(q, "a")) || test_pass()) {
     printf("Failed to push an item to the queue.\n");
     test_fail();
@@ -111,227 +249,149 @@ void queue_tests(void) {
     test_fail();
     return;
   }
-  q_del(q);
-  if(3 != q_get_allocated() || test_pass()) {
-    printf("Should be 3 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(3 != q_get_freed() || test_pass()) {
-    printf("Should be 3 queues freed\n");
-    test_fail();
-    return;
-  }
-
-  if(0 == (q = q_new()) || test_pass()) {
-    printf("Failed to create queue.\n");
-    test_fail();
-    return;
-  }
-  if(4 != q_get_allocated() || test_pass()) {
-    printf("Should be 4 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(3 != q_get_freed() || test_pass()) {
-    printf("Should be 3 queues freed\n");
-    test_fail();
-    return;
-  }
-  if(0 == (q = q_push(q, "a")) || test_pass()) {
-    printf("Failed to push an item to the queue.\n");
-    test_fail();
-    return;
-  }
   if(0 == (q = q_push(q, "b")) || test_pass()) {
     printf("Failed to push an item to the queue.\n");
     test_fail();
     return;
   }
-  q_del(q);
-  if(4 != q_get_allocated() || test_pass()) {
-    printf("Should be 4 queues allocated\n");
+  if('a' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'a' at front of queue.\n");
     test_fail();
     return;
   }
-  if(4 != q_get_freed() || test_pass()) {
-    printf("Should be 4 queues freed\n");
-    test_fail();
-    return;
-  }
-
-  printf("Testing q_size()\n");
-
-  if(0 == (q = q_new()) || test_pass()) {
-    printf("Failed to create queue.\n");
-    test_fail();
-    return;
-  }
-  if(5 != q_get_allocated() || test_pass()) {
-    printf("Should be 5 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(4 != q_get_freed() || test_pass()) {
-    printf("Should be 4 queues freed\n");
-    test_fail();
-    return;
-  }
-  if(0 == (q = q_push(q, "a")) || test_pass()) {
+  if(0 == (q = q_push(q, "c")) || test_pass()) {
     printf("Failed to push an item to the queue.\n");
     test_fail();
     return;
   }
-  if(0 == (q = q_push(q, "b")) || test_pass()) {
+  if('a' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'a' at front of queue.\n");
+    test_fail();
+    return;
+  }
+  if(0 == q_pop(q) || test_pass()) {
+    printf("Failed to pop an item from the queue.\n");
+    test_fail();
+    return;
+  }
+  if('b' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'b' at front of queue.\n");
+    test_fail();
+    return;
+  }
+  if(0 == (q = q_push(q, "d")) || test_pass()) {
     printf("Failed to push an item to the queue.\n");
     test_fail();
     return;
   }
-  if(2 != q_size(q) || test_pass()) {
-    printf("Queue size is wrong: %d.\n", q_size(q));
+  if('b' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'b' at front of queue.\n");
     test_fail();
     return;
   }
-  q_del(q);
-  if(5 != q_get_allocated() || test_pass()) {
-    printf("Should be 5 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(5 != q_get_freed() || test_pass()) {
-    printf("Should be 5 queues freed\n");
-    test_fail();
-    return;
-  }
-
-  printf("Testing q_pop()\n");
-  if(0 == (q = q_new()) || test_pass()) {
-    printf("Failed to create queue.\n");
-    test_fail();
-    return;
-  }
-  if(6 != q_get_allocated() || test_pass()) {
-    printf("Should be 6 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(5 != q_get_freed() || test_pass()) {
-    printf("Should be 5 queues freed\n");
-    test_fail();
-    return;
-  }
-  if(0 == (q = q_push(q, "a")) || test_pass()) {
+  if(0 == (q = q_push(q, "e")) || test_pass()) {
     printf("Failed to push an item to the queue.\n");
     test_fail();
     return;
   }
-  if(0 == (q = q_push(q, "b")) || test_pass()) {
-    printf("Failed to push an item to the queue.\n");
+  if('b' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'b' at front of queue.\n");
     test_fail();
     return;
   }
-  if(2 != q_size(q) || test_pass()) {
-    printf("Queue size is wrong: %d.\n", q_size(q));
+  if(0 == q_pop(q) || test_pass()) {
+    printf("Failed to pop an item from the queue.\n");
     test_fail();
     return;
   }
-  if('a' != ((char *)q_pop(q))[0] || test_pass()) {
-    printf("Expected 'a' to be popped from queue.\n");
+  if('c' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'c' at front of queue.\n");
     test_fail();
     return;
   }
-  if(1 != q_size(q) || test_pass()) {
-    printf("Queue size is wrong: %d.\n", q_size(q));
+  if(0 == q_pop(q) || test_pass()) {
+    printf("Failed to pop an item from the queue.\n");
     test_fail();
     return;
   }
-  if('b' != ((char *)q_pop(q))[0] || test_pass()) {
-    printf("Expected 'b' to be popped from queue.\n");
+  if('d' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'd' at front of queue.\n");
     test_fail();
     return;
   }
-  if(0 != q_size(q) || test_pass()) {
-    printf("Queue size is wrong: %d.\n", q_size(q));
+  if(0 == q_pop(q) || test_pass()) {
+    printf("Failed to pop an item from the queue.\n");
     test_fail();
     return;
   }
-  q_del(q);
-  if(6 != q_get_allocated() || test_pass()) {
-    printf("Should be 6 queues allocated\n");
+  if('e' != ((char *)q_front(q))[0] || test_pass()) {
+    printf("Expected 'e' at front of queue.\n");
     test_fail();
     return;
   }
-  if(6 != q_get_freed() || test_pass()) {
-    printf("Should be 6 queues freed\n");
-    test_fail();
-    return;
-  }
-
-  printf("Testing pop on an empty queue\n");
-  if(0 == (q = q_new()) || test_pass()) {
-    printf("Failed to create queue.\n");
-    test_fail();
-    return;
-  }
-  if(7 != q_get_allocated() || test_pass()) {
-    printf("Should be 7 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(6 != q_get_freed() || test_pass()) {
-    printf("Should be 6 queues freed\n");
-    test_fail();
-    return;
-  }
-  if(0 != q_pop(q) || test_pass()) {
-    printf("Popping an empty queue should return zero.\n");
-    test_fail();
-    return;
-  }
-  q_del(q);
-  if(7 != q_get_allocated() || test_pass()) {
-    printf("Should be 7 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(7 != q_get_freed() || test_pass()) {
-    printf("Should be 7 queues freed\n");
-    test_fail();
-    return;
-  }
-
-  printf("Testing front on an empty queue\n");
-  if(0 == (q = q_new()) || test_pass()) {
-    printf("Failed to create queue.\n");
-    test_fail();
-    return;
-  }
-  if(8 != q_get_allocated() || test_pass()) {
-    printf("Should be 8 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(7 != q_get_freed() || test_pass()) {
-    printf("Should be 7 queues freed\n");
+  if(0 == q_pop(q) || test_pass()) {
+    printf("Failed to pop an item from the queue.\n");
     test_fail();
     return;
   }
   if(0 != q_front(q) || test_pass()) {
-    printf("Front of an empty queue should be zero.\n");
-    test_fail();
-    return;
-  }
-  q_del(q);
-  if(8 != q_get_allocated() || test_pass()) {
-    printf("Should be 8 queues allocated\n");
-    test_fail();
-    return;
-  }
-  if(8 != q_get_freed() || test_pass()) {
-    printf("Should be 8 queues freed\n");
+    printf("Queue should be empty.\n");
     test_fail();
     return;
   }
 
-  printf("Completed queue tests.\n");
+  q_del(q);
+
+  if(1 != q_get_allocated() || test_pass()) {
+    printf("Should be 1 queue allocated\n");
+    test_fail();
+    return;
+  }
+  if(1 != q_get_freed() || test_pass()) {
+    printf("Should be 1 queue freed\n");
+    test_fail();
+    return;
+  }
+}
+
+void _test_q_size(void) {
+  queue * q;
+
+  printf("Testing q_size()\n");
+
+  q_reset_alloc();
+
+  if(0 != q_get_allocated() || test_pass()) {
+    printf("Should be 0 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_get_freed() || test_pass()) {
+    printf("Should be 0 queues freed\n");
+    test_fail();
+    return;
+  }
+
+  q = 0;
+}
+
+void _test_q_pop(void) {
+  queue * q;
+
+  printf("Testing q_pop()\n");
+
+  q_reset_alloc();
+
+  if(0 != q_get_allocated() || test_pass()) {
+    printf("Should be 0 queues allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != q_get_freed() || test_pass()) {
+    printf("Should be 0 queues freed\n");
+    test_fail();
+    return;
+  }
+
+  q = 0;
 }
