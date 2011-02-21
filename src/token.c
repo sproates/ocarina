@@ -8,6 +8,18 @@
 #include "memory.h"
 #include <stdio.h>
 
+/* private variables */
+
+/**
+ * The number of tokens that have been allocated.
+ */
+unsigned int tok_allocated = 0;
+
+/**
+ * The number of tokens that have been freed.
+ */
+unsigned int tok_freed = 0;
+
 /* public function definitions */
 
 token * tok_new(tok_type type, string * data) {
@@ -75,3 +87,16 @@ void tok_print(token * tok) {
   }
   printf("\n}\n");
 }
+
+unsigned int tok_get_allocated(void) {
+  return tok_allocated;
+}
+
+unsigned int tok_get_freed(void) {
+  return tok_freed;
+}
+
+void tok_reset_alloc(void) {
+  tok_freed = tok_allocated = 0;
+}
+

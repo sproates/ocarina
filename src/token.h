@@ -65,4 +65,21 @@ void tok_delete(token * tok);
  */
 void tok_print(token * tok);
 
+/**
+ * Get the number of tokens that have been allocated.
+ * @return The number of allocated tokens.
+ */
+unsigned int tok_get_allocated(void);
+
+/**
+ * Get the number of tokens that have been freed.
+ * @return The number of freed tokens.
+ */
+unsigned int tok_get_freed(void);
+
+/**
+ * Reset the number of tokens that have been freed and allocated.
+ */
+void tok_reset_alloc(void);
+
 #endif
