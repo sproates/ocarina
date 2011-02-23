@@ -60,7 +60,7 @@ void queue_tests(void) {
 void _test_q_new(void) {
   queue * q;
 
-  printf("Testing q_new()\n");
+  printf("\tTesting q_new()... ");
 
   q_reset_alloc();
 
@@ -103,12 +103,13 @@ void _test_q_new(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_q_push(void) {
   queue * q;
 
-  printf("Testing q_push()\n");
+  printf("\tTesting q_push()...");
 
   q_reset_alloc();
 
@@ -213,12 +214,13 @@ void _test_q_push(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_q_front(void) {
   queue * q;
 
-  printf("Testing q_front()\n");
+  printf("\tTesting q_front()... ");
 
   q_reset_alloc();
 
@@ -352,12 +354,13 @@ void _test_q_front(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_q_size(void) {
   queue * q;
 
-  printf("Testing q_size()\n");
+  printf("\tTesting q_size()... ");
 
   q_reset_alloc();
 
@@ -692,12 +695,13 @@ void _test_q_size(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_q_pop(void) {
   queue * q;
 
-  printf("Testing q_pop()\n");
+  printf("\tTesting q_pop()...");
 
   q_reset_alloc();
 
@@ -887,4 +891,5 @@ void _test_q_pop(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
