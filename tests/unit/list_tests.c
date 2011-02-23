@@ -92,7 +92,7 @@ void list_tests(void) {
 void _test_list_new(void) {
   list * x;
 
-  printf("Testing list_new()\n");
+  printf("\tTesting list_new()...");
 
   list_reset_alloc();
 
@@ -136,12 +136,13 @@ void _test_list_new(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_list_size(void) {
   list * x, * y, * z;
 
-  printf("Testing list_size()\n");
+  printf("\tTesting list_size()... ");
 
   list_reset_alloc();
 
@@ -234,12 +235,13 @@ void _test_list_size(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_list_append(void) {
   list * x, * y;
 
-  printf("Testing list_append()\n");
+  printf("\tTesting list_append()... ");
 
   list_reset_alloc();
 
@@ -383,12 +385,13 @@ void _test_list_append(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_list_prepend(void) {
   list * x, * y, * z;
 
-  printf("Testing list_prepend()\n");
+  printf("\tTesting list_prepend()... ");
 
   list_reset_alloc();
 
@@ -534,12 +537,13 @@ void _test_list_prepend(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_list_tail(void) {
   list * x, * y, * z;
 
-  printf("Testing list_tail()\n");
+  printf("\tTesting list_tail()... ");
 
   list_reset_alloc();
 
@@ -660,12 +664,13 @@ void _test_list_tail(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_list_head(void) {
   list * x, * y, * z;
 
-  printf("Testing list_head()\n");
+  printf("\tTesting list_head()... ");
 
   list_reset_alloc();
 
@@ -786,12 +791,13 @@ void _test_list_head(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_list_remove(void) {
   list * x, * y, * z;
 
-  printf("Testing list_remove()\n");
+  printf("\tTesting list_remove()... ");
 
   /* Remove tail of list */
 
@@ -1029,16 +1035,18 @@ void _test_list_remove(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_list_composite(void) {
-  printf("Running composite list tests\n");
+  printf("\tRunning composite list tests... ");
+  printf("\n");
 }
 
 void _test_list_foreach(void) {
   list * x;
 
-  printf("Testing list_foreach()\n");
+  printf("\tTesting list_foreach()... ");
 
   list_reset_alloc();
 
@@ -1060,6 +1068,7 @@ void _test_list_foreach(void) {
   list_append(x, list_new("e"));
   list_append(x, list_new("f"));
 
+  printf("\n");
   list_foreach(x, &_print_list_as_char);
   
   list_del(x);
@@ -1074,6 +1083,7 @@ void _test_list_foreach(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _print_list_as_char(void * data) {
