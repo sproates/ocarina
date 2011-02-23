@@ -1062,11 +1062,127 @@ void _test_list_foreach(void) {
   }
 
   x = list_new("a");
-  list_append(x, list_new("b"));
-  list_append(x, list_new("c"));
-  list_append(x, list_new("d"));
-  list_append(x, list_new("e"));
-  list_append(x, list_new("f"));
+
+  if(1 != list_get_allocated() || test_pass()) {
+    printf("Should be 1 list allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+  if(1 != list_size(x) || test_pass()) {
+    printf("List size should be 1.\n");
+    test_fail();
+    return;
+  }
+
+  if(0 == list_append(x, list_new("b")) || test_pass()) {
+    printf("Failed to append to list\n");
+    test_fail();
+    return;
+  }
+  if(2 != list_get_allocated() || test_pass()) {
+    printf("Should be 2 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+  if(2 != list_size(x) || test_pass()) {
+    printf("List size should be 2.\n");
+    test_fail();
+    return;
+  }
+
+  if(0 == list_append(x, list_new("c")) || test_pass()) {
+    printf("Failed to append to list\n");
+    test_fail();
+    return;
+  }
+  if(3 != list_get_allocated() || test_pass()) {
+    printf("Should be 3 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+  if(3 != list_size(x) || test_pass()) {
+    printf("List size should be 3.\n");
+    test_fail();
+    return;
+  }
+
+  if(0 == list_append(x, list_new("d")) || test_pass()) {
+    printf("Failed to append to list\n");
+    test_fail();
+    return;
+  }
+  if(4 != list_get_allocated() || test_pass()) {
+    printf("Should be 4 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+  if(4 != list_size(x) || test_pass()) {
+    printf("List size should be 4.\n");
+    test_fail();
+    return;
+  }
+
+  if(0 == list_append(x, list_new("e")) || test_pass()) {
+    printf("Failed to append to list\n");
+    test_fail();
+    return;
+  }
+  if(5 != list_get_allocated() || test_pass()) {
+    printf("Should be 5 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+  if(5 != list_size(x) || test_pass()) {
+    printf("List size should be 5.\n");
+    test_fail();
+    return;
+  }
+
+  if(0 == list_append(x, list_new("f")) || test_pass()) {
+    printf("Failed to append to list\n");
+    test_fail();
+    return;
+  }
+  if(6 != list_get_allocated() || test_pass()) {
+    printf("Should be 6 lists allocated\n");
+    test_fail();
+    return;
+  }
+  if(0 != list_get_freed() || test_pass()) {
+    printf("Should be 0 lists freed\n");
+    test_fail();
+    return;
+  }
+  if(6 != list_size(x) || test_pass()) {
+    printf("List size should be 6.\n");
+    test_fail();
+    return;
+  }
 
   printf("\n");
   list_foreach(x, &_print_list_as_char);
