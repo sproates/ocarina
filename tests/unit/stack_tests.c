@@ -63,7 +63,7 @@ void stack_tests(void) {
 void _test_stack_new() {
   stack * s;
 
-  printf("Testing stack_new()\n");
+  printf("\tTesting stack_new()... ");
 
   stack_reset_alloc();
 
@@ -93,12 +93,13 @@ void _test_stack_new() {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_stack_push() {
   stack * s;
 
-  printf("Testing stack_push()\n");
+  printf("\tTesting stack_push()... ");
 
   stack_reset_alloc();
 
@@ -138,12 +139,13 @@ void _test_stack_push() {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_stack_top(void) {
   stack * s;
 
-  printf("Testing stack_top()\n");
+  printf("\tTesting stack_top()... ");
 
   stack_reset_alloc();
 
@@ -355,12 +357,13 @@ void _test_stack_top(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_stack_pop(void) {
   stack * s;
 
-  printf("Testing stack_pop()\n");
+  printf("\tTesting stack_pop()... ");
 
   stack_reset_alloc();
 
@@ -412,8 +415,6 @@ void _test_stack_pop(void) {
   }
 
   stack_reset_alloc();
-
-  printf("\n\ntesting multiple push/pop\n\n");
 
   if(0 != stack_get_allocated() || test_pass()) {
     printf("Should be 0 stacks allocated\n");
@@ -526,12 +527,13 @@ void _test_stack_pop(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
 
 void _test_stack_size(void) {
   stack * s;
 
-  printf("Testing stack_size()\n");
+  printf("\tTesting stack_size()... ");
 
   stack_reset_alloc();
 
@@ -1127,4 +1129,5 @@ void _test_stack_size(void) {
     test_fail();
     return;
   }
+  printf("\n");
 }
